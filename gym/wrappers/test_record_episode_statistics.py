@@ -1,7 +1,7 @@
 import pytest
 
-import gym
-from gym.wrappers import RecordEpisodeStatistics
+from gym import gym
+from gym.gym.wrappers import RecordEpisodeStatistics
 
 
 @pytest.mark.parametrize('env_id', ['CartPole-v0', 'Pendulum-v0'])

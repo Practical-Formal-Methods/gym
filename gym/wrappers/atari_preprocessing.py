@@ -1,8 +1,8 @@
 import numpy as np
 
-import gym
-from gym.spaces import Box
-from gym.wrappers import TimeLimit
+from gym import gym
+from gym.gym.spaces import Box
+from gym.gym.wrappers import TimeLimit
 try:
     import cv2
 except ImportError:

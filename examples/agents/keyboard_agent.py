@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import sys, gym, time
-
+import sys, time
+from gym import gym
 #
 # Test yourself as a learning agent! Pass environment name as a command-line argument, for example:
 #

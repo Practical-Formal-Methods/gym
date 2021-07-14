@@ -3,7 +3,7 @@ pytest.importorskip("atari_py")
 
 import numpy as np
 import gym
-from gym.wrappers import FrameStack
+from gym.gym.wrappers import FrameStack
 try:
     import lz4
 except ImportError:

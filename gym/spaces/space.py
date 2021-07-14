@@ -1,4 +1,4 @@
-from gym.utils import seeding
+from gym.gym.utils import seeding
 
 
 class Space(object):

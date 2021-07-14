@@ -1,6 +1,6 @@
 import gym
-from gym import error
-from gym.utils import closer
+from gym.gym import error
+from gym.gym.utils import closer
 
 env_closer = closer.Closer()
 

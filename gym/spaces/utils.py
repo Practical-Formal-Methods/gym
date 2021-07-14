@@ -1,12 +1,12 @@
 from collections import OrderedDict
 import numpy as np
 
-from gym.spaces import Box
-from gym.spaces import Discrete
-from gym.spaces import MultiDiscrete
-from gym.spaces import MultiBinary
-from gym.spaces import Tuple
-from gym.spaces import Dict
+from gym.gym.spaces import Box
+from gym.gym.spaces import Discrete
+from gym.gym.spaces import MultiDiscrete
+from gym.gym.spaces import MultiBinary
+from gym.gym.spaces import Tuple
+from gym.gym.spaces import Dict
 
 
 def flatdim(space):

@@ -6,9 +6,9 @@ import math
 
 import numpy as np
 
-import gym
-from gym import spaces
-from gym.utils import seeding
+from gym import gym
+from gym.gym import spaces
+from gym.gym.utils import seeding
 
 
 class MountainCarEnv(gym.Env):

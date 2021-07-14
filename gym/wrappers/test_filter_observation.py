@@ -2,8 +2,8 @@ import pytest
 import numpy as np
 
 import gym
-from gym import spaces
-from gym.wrappers.filter_observation import FilterObservation
+from gym.gym import spaces
+from gym.gym.wrappers.filter_observation import FilterObservation
 
 
 class FakeEnvironment(gym.Env):

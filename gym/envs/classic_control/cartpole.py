@@ -5,9 +5,9 @@ permalink: https://perma.cc/C9ZM-652R
 """
 
 import math
-import gym
-from gym import spaces, logger
-from gym.utils import seeding
+from gym import gym
+from gym.gym import spaces, logger
+from gym.gym.utils import seeding
 import numpy as np
 
 

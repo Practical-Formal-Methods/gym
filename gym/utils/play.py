@@ -1,8 +1,8 @@
-import gym
+from gym import gym
 import pygame
 import matplotlib
 import argparse
-from gym import logger
+from gym.gym import logger
 try:
     matplotlib.use('TkAgg')
     import matplotlib.pyplot as plt

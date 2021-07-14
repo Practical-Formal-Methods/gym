@@ -3,8 +3,8 @@ import pytest
 import numpy as np
 
 import gym
-from gym.wrappers import FlattenObservation
-from gym import spaces
+from gym.gym.wrappers import FlattenObservation
+from gym.gym import spaces
 
 
 @pytest.mark.parametrize('env_id', ['Blackjack-v0', 'KellyCoinflip-v0'])

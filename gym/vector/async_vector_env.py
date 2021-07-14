@@ -5,11 +5,11 @@ import sys
 from enum import Enum
 from copy import deepcopy
 
-from gym import logger
-from gym.vector.vector_env import VectorEnv
-from gym.error import (AlreadyPendingCallError, NoAsyncCallError,
+from gym.gym import logger
+from gym.gym.vector.vector_env import VectorEnv
+from gym.gym.error import (AlreadyPendingCallError, NoAsyncCallError,
                        ClosedEnvironmentError, CustomSpaceError)
-from gym.vector.utils import (create_shared_memory, create_empty_array,
+from gym.gym.vector.utils import (create_shared_memory, create_empty_array,
                               write_to_shared_memory, read_from_shared_memory,
                               concatenate, CloudpickleWrapper, clear_mpi_env_vars)
 

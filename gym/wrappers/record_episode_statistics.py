@@ -1,7 +1,7 @@
 import time
 from collections import deque
 
-import gym
+from gym import gym
 
 
 class RecordEpisodeStatistics(gym.Wrapper):

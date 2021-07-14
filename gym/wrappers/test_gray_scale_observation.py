@@ -3,8 +3,8 @@ import pytest
 import numpy as np
 
 import gym
-from gym.wrappers import GrayScaleObservation
-from gym.wrappers import AtariPreprocessing
+from gym.gym.wrappers import GrayScaleObservation
+from gym.gym.wrappers import AtariPreprocessing
 pytest.importorskip('atari_py')
 pytest.importorskip('cv2')
 

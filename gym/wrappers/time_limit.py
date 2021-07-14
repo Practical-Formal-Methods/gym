@@ -1,4 +1,4 @@
-import gym
+from gym import gym
 
 
 class TimeLimit(gym.Wrapper):

@@ -6,8 +6,8 @@ import copy
 
 import numpy as np
 
-from gym import spaces
-from gym import ObservationWrapper
+from gym.gym import spaces
+from gym.gym import ObservationWrapper
 
 
 STATE_KEY = 'state'

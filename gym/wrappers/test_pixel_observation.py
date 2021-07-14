@@ -5,8 +5,8 @@ import pytest
 import numpy as np
 
 import gym
-from gym import spaces
-from gym.wrappers.pixel_observation import PixelObservationWrapper, STATE_KEY
+from gym.gym import spaces
+from gym.gym.wrappers.pixel_observation import PixelObservationWrapper, STATE_KEY
 
 
 class FakeEnvironment(gym.Env):

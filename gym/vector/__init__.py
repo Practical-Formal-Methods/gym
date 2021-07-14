@@ -3,9 +3,9 @@ try:
 except ImportError:
     Iterable = (tuple, list)
 
-from gym.vector.async_vector_env import AsyncVectorEnv
-from gym.vector.sync_vector_env import SyncVectorEnv
-from gym.vector.vector_env import VectorEnv, VectorEnvWrapper
+from gym.gym.vector.async_vector_env import AsyncVectorEnv
+from gym.gym.vector.sync_vector_env import SyncVectorEnv
+from gym.gym.vector.vector_env import VectorEnv, VectorEnvWrapper
 
 __all__ = ['AsyncVectorEnv', 'SyncVectorEnv', 'VectorEnv', 'VectorEnvWrapper', 'make']
 

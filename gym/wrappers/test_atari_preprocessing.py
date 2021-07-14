@@ -1,6 +1,6 @@
 import numpy as np
 import gym
-from gym.wrappers import AtariPreprocessing
+from gym.gym.wrappers import AtariPreprocessing
 import pytest
 
 pytest.importorskip('atari_py')
