@@ -1,7 +1,7 @@
 import numpy as np
-import gym
-from gym import spaces
-from gym.utils import seeding
+import mygym
+from mygym import spaces
+from mygym.utils import seeding
 
 # Unit test environment for CNNs and CNN+RNN algorithms.
 # Looks like this (RGB observations):
@@ -38,7 +38,7 @@ color_black = np.array((0,0,0)).astype('float32')
 color_white = np.array((255,255,255)).astype('float32')
 color_green = np.array((0,255,0)).astype('float32')
 
-class CubeCrash(gym.Env):
+class CubeCrash(mygym.Env):
     metadata = {
         'render.modes': ['human', 'rgb_array'],
         'video.frames_per_second' : 60,
@@ -125,7 +125,7 @@ class CubeCrash(gym.Env):
             return self.last_obs
 
         elif mode == 'human':
-            from gym.envs.classic_control import rendering
+            from mygym.envs.classic_control import rendering
             if self.viewer is None:
                 self.viewer = rendering.SimpleImageViewer()
             self.viewer.imshow(self.last_obs)

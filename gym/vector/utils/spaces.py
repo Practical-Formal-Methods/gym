@@ -1,7 +1,7 @@
 import numpy as np
 from collections import OrderedDict
 
-from gym.gym.spaces import Space, Box, Discrete, MultiDiscrete, MultiBinary, Tuple, Dict
+from mygym.gym.spaces import Space, Box, Discrete, MultiDiscrete, MultiBinary, Tuple, Dict
 
 _BaseGymSpaces = (Box, Discrete, MultiDiscrete, MultiBinary)
 __all__ = ['_BaseGymSpaces', 'batch_space']
@@ -26,7 +26,7 @@ def batch_space(space, n=1):
 
     Example
     -------
-    >>> from gym.spaces import Box, Dict
+    >>> from mygym.spaces import Box, Dict
     >>> space = Dict({
     ... 'position': Box(low=0, high=1, shape=(3,), dtype=np.float32),
     ... 'velocity': Box(low=0, high=1, shape=(2,), dtype=np.float32)})
@@ -43,7 +43,7 @@ def batch_space(space, n=1):
         return batch_space_custom(space, n=n)
     else:
         raise ValueError('Cannot batch space with type `{0}`. The space must '
-                         'be a valid `gym.Space` instance.'.format(type(space)))
+                         'be a valid `mygym.Space` instance.'.format(type(space)))
 
 def batch_space_base(space, n=1):
     if isinstance(space, Box):

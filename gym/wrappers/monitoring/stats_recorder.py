@@ -2,9 +2,9 @@ import json
 import os
 import time
 
-from gym.gym import error
-from gym.gym.utils import atomic_write
-from gym.gym.utils.json_utils import json_encode_np
+from mygym.gym import error
+from mygym.gym.utils import atomic_write
+from mygym.gym.utils.json_utils import json_encode_np
 
 class StatsRecorder(object):
     def __init__(self, directory, file_prefix, autoreset=False, env_id=None):

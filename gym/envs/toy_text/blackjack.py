@@ -1,6 +1,6 @@
-import gym
-from gym import spaces
-from gym.utils import seeding
+import mygym
+from mygym import spaces
+from mygym.utils import seeding
 
 
 def cmp(a, b):
@@ -41,7 +41,7 @@ def is_natural(hand):  # Is this hand a natural blackjack?
     return sorted(hand) == [1, 10]
 
 
-class BlackjackEnv(gym.Env):
+class BlackjackEnv(mygym.Env):
     """Simple blackjack environment
 
     Blackjack is a card game where the goal is to obtain cards that sum to as

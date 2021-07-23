@@ -1,11 +1,11 @@
 import numpy as np
 
-import gym
-from gym import spaces
-from gym.utils import seeding
+import mygym
+from mygym import spaces
+from mygym.utils import seeding
 
 
-class GuessingGame(gym.Env):
+class GuessingGame(mygym.Env):
     """Number guessing game
 
     The object of the game is to guess within 1% of the randomly chosen number

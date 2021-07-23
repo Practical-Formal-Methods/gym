@@ -1,11 +1,11 @@
 import numpy as np
 
-import gym
-from gym import spaces
-from gym.utils import seeding
+import mygym
+from mygym import spaces
+from mygym.utils import seeding
 
 
-class HotterColder(gym.Env):
+class HotterColder(mygym.Env):
     """Hotter Colder
     The goal of hotter colder is to guess closer to a randomly selected number
 

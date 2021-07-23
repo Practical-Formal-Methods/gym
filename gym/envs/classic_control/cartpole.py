@@ -5,9 +5,9 @@ permalink: https://perma.cc/C9ZM-652R
 """
 
 import math
-from gym import gym
-from gym.gym import spaces, logger
-from gym.gym.utils import seeding
+from mygym import gym
+from mygym.gym import spaces, logger
+from mygym.gym.utils import seeding
 import numpy as np
 
 
@@ -171,7 +171,7 @@ class CartPoleEnv(gym.Env):
         cartheight = 30.0
 
         if self.viewer is None:
-            from gym.envs.classic_control import rendering
+            from mygym.envs.classic_control import rendering
             self.viewer = rendering.Viewer(screen_width, screen_height)
             l, r, t, b = -cartwidth / 2, cartwidth / 2, cartheight / 2, -cartheight / 2
             axleoffset = cartheight / 4.0

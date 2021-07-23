@@ -6,9 +6,9 @@ import math
 
 import numpy as np
 
-from gym import gym
-from gym.gym import spaces
-from gym.gym.utils import seeding
+from mygym import gym
+from mygym.gym import spaces
+from mygym.gym.utils import seeding
 
 
 class MountainCarEnv(gym.Env):
@@ -123,7 +123,7 @@ class MountainCarEnv(gym.Env):
         carheight = 20
 
         if self.viewer is None:
-            from gym.envs.classic_control import rendering
+            from mygym.envs.classic_control import rendering
             self.viewer = rendering.Viewer(screen_width, screen_height)
             xs = np.linspace(self.min_position, self.max_position, 100)
             ys = self._height(xs)

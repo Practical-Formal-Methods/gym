@@ -1,9 +1,9 @@
-import gym
-from gym import spaces
-from gym.utils import seeding
+import mygym
+from mygym import spaces
+from mygym.utils import seeding
 
 
-class NChainEnv(gym.Env):
+class NChainEnv(mygym.Env):
     """n-Chain environment
 
     This game presents moves along a linear chain of states, with two actions:

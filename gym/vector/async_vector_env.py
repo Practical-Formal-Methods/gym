@@ -5,13 +5,13 @@ import sys
 from enum import Enum
 from copy import deepcopy
 
-from gym.gym import logger
-from gym.gym.vector.vector_env import VectorEnv
-from gym.gym.error import (AlreadyPendingCallError, NoAsyncCallError,
-                       ClosedEnvironmentError, CustomSpaceError)
-from gym.gym.vector.utils import (create_shared_memory, create_empty_array,
-                              write_to_shared_memory, read_from_shared_memory,
-                              concatenate, CloudpickleWrapper, clear_mpi_env_vars)
+from mygym.gym import logger
+from mygym.gym.vector.vector_env import VectorEnv
+from mygym.gym.error import (AlreadyPendingCallError, NoAsyncCallError,
+                             ClosedEnvironmentError, CustomSpaceError)
+from mygym.gym.vector.utils import (create_shared_memory, create_empty_array,
+                                    write_to_shared_memory, read_from_shared_memory,
+                                    concatenate, CloudpickleWrapper, clear_mpi_env_vars)
 
 __all__ = ['AsyncVectorEnv']
 
@@ -31,11 +31,11 @@ class AsyncVectorEnv(VectorEnv):
     env_fns : iterable of callable
         Functions that create the environments.
 
-    observation_space : `gym.spaces.Space` instance, optional
+    observation_space : `mygym.spaces.Space` instance, optional
         Observation space of a single environment. If `None`, then the
         observation space of the first environment is taken.
 
-    action_space : `gym.spaces.Space` instance, optional
+    action_space : `mygym.spaces.Space` instance, optional
         Action space of a single environment. If `None`, then the action space
         of the first environment is taken.
 
@@ -91,7 +91,7 @@ class AsyncVectorEnv(VectorEnv):
             except CustomSpaceError:
                 raise ValueError('Using `shared_memory=True` in `AsyncVectorEnv` '
                     'is incompatible with non-standard Gym observation spaces '
-                    '(i.e. custom spaces inheriting from `gym.Space`), and is '
+                    '(i.e. custom spaces inheriting from `mygym.Space`), and is '
                     'only compatible with default Gym spaces (e.g. `Box`, '
                     '`Tuple`, `Dict`) for batching. Set `shared_memory=False` '
                     'if you use custom observation spaces.')

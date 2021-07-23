@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os.path
 
-# Don't import gym module here, since deps may not be installed
+# Don't import mygym module here, since deps may not be installed
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'gym'))
 from version import VERSION
 
@@ -18,15 +18,15 @@ extras = {
 extras['nomujoco'] = list(set([item for name, group in extras.items() if name != 'mujoco' and name != "robotics" for item in group]))
 extras['all'] = list(set([item for group in extras.values() for item in group]))
 
-setup(name='gym',
+setup(name='mygym',
       version=VERSION,
       description='The OpenAI Gym: A toolkit for developing and comparing your reinforcement learning agents.',
       url='https://github.com/openai/gym',
       author='OpenAI',
-      author_email='gym@openai.com',
+      author_email='mygym@openai.com',
       license='',
       packages=[package for package in find_packages()
-                if package.startswith('gym')],
+                if package.startswith('mygym')],
       zip_safe=False,
       install_requires=[
         'scipy',
@@ -36,7 +36,7 @@ setup(name='gym',
         'cloudpickle>=1.2.0,<1.7.0',
       ],
       extras_require=extras,
-      package_data={'gym': [
+      package_data={'mygym': [
         'envs/mujoco/assets/*.xml',
         'envs/classic_control/assets/*.png',
         'envs/robotics/assets/LICENSE.md',

@@ -12,7 +12,7 @@ class Tuple(Space):
     def __init__(self, spaces):
         self.spaces = spaces
         for space in spaces:
-            assert isinstance(space, Space), "Elements of the tuple must be instances of gym.Space"
+            assert isinstance(space, Space), "Elements of the tuple must be instances of mygym.Space"
         super(Tuple, self).__init__(None, None)
 
     def seed(self, seed=None):

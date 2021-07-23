@@ -2,7 +2,7 @@ import numpy as np
 import sys
 from contextlib import closing
 from io import StringIO
-from gym.envs.toy_text import discrete
+from mygym.envs.toy_text import discrete
 
 UP = 0
 RIGHT = 1

@@ -4,12 +4,12 @@
 import pytest
 import numpy as np
 
-import gym
-from gym.spaces import Dict, Box, Discrete, Tuple
-from gym.wrappers import FilterObservation, FlattenObservation
+import mygym
+from mygym.spaces import Dict, Box, Discrete, Tuple
+from mygym.wrappers import FilterObservation, FlattenObservation
 
 
-class FakeEnvironment(gym.Env):
+class FakeEnvironment(mygym.Env):
     def __init__(self, observation_space):
         self.observation_space = observation_space
         self.obs_keys = self.observation_space.spaces.keys()

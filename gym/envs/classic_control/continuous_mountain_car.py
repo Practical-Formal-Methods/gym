@@ -8,7 +8,7 @@ A merge between two sources:
 of Jose Antonio Martin H. (version 1.0), adapted by  'Tom Schaul, tom@idsia.ch'
 and then modified by Arnaud de Broissia
 
-* the OpenAI/gym MountainCar environment
+* the OpenAI/mygym MountainCar environment
 itself from
 http://incompleteideas.net/sutton/MountainCar/MountainCar1.cp
 permalink: https://perma.cc/6Z2N-PFWC
@@ -18,9 +18,9 @@ import math
 
 import numpy as np
 
-from gym import gym
-from gym.gym import spaces
-from gym.gym.utils import seeding
+from mygym import gym
+from mygym.gym import spaces
+from mygym.gym.utils import seeding
 
 
 class Continuous_MountainCarEnv(gym.Env):
@@ -35,7 +35,7 @@ class Continuous_MountainCarEnv(gym.Env):
         self.min_position = -1.2
         self.max_position = 0.6
         self.max_speed = 0.07
-        self.goal_position = 0.45 # was 0.5 in gym, 0.45 in Arnaud de Broissia's version
+        self.goal_position = 0.45 # was 0.5 in mygym, 0.45 in Arnaud de Broissia's version
         self.goal_velocity = goal_velocity
         self.power = 0.0015
 
@@ -111,7 +111,7 @@ class Continuous_MountainCarEnv(gym.Env):
         carheight = 20
 
         if self.viewer is None:
-            from gym.envs.classic_control import rendering
+            from mygym.envs.classic_control import rendering
             self.viewer = rendering.Viewer(screen_width, screen_height)
             xs = np.linspace(self.min_position, self.max_position, 100)
             ys = self._height(xs)

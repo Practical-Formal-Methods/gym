@@ -1,7 +1,7 @@
 import numpy as np
 
-from gym import Env, spaces
-from gym.utils import seeding
+from mygym import Env, spaces
+from mygym.utils import seeding
 
 
 def categorical_sample(prob_n, np_random):

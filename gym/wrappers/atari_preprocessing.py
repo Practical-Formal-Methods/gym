@@ -1,8 +1,8 @@
 import numpy as np
 
-from gym import gym
-from gym.gym.spaces import Box
-from gym.gym.wrappers import TimeLimit
+from mygym import gym
+from mygym.gym.spaces import Box
+from mygym.gym.wrappers import TimeLimit
 try:
     import cv2
 except ImportError:
@@ -45,7 +45,7 @@ class AtariPreprocessing(gym.Wrapper):
                  grayscale_newaxis=False, scale_obs=False):
         super().__init__(env)
         assert cv2 is not None, \
-            "opencv-python package not installed! Try running pip install gym[atari] to get dependencies  for atari"
+            "opencv-python package not installed! Try running pip install mygym[atari] to get dependencies  for atari"
         assert frame_skip > 0
         assert screen_size > 0
         assert noop_max >= 0

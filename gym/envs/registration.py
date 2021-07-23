@@ -3,7 +3,7 @@ import copy
 import importlib
 import warnings
 
-from gym.gym import error, logger
+from mygym.gym import error, logger
 
 # This format is true today, but it's *not* an official spec.
 # [username/](env-name)-v(version)    env-name is group 1, version is group 2
@@ -96,7 +96,7 @@ class EnvRegistry(object):
         if hasattr(env, "_reset") and hasattr(env, "_step") and not getattr(env, "_gym_disable_underscore_compat", False):
             patch_deprecated_methods(env)
         if env.spec.max_episode_steps is not None:
-            from gym.gym.wrappers.time_limit import TimeLimit
+            from mygym.gym.wrappers.time_limit import TimeLimit
             env = TimeLimit(env, max_episode_steps=env.spec.max_episode_steps)
         return env
 
@@ -110,7 +110,7 @@ class EnvRegistry(object):
                 importlib.import_module(mod_name)
             # catch ImportError for python2.7 compatibility
             except ImportError:
-                raise error.Error('A module ({}) was specified for the environment but was not found, make sure the package is installed with `pip install` before calling `gym.make()`'.format(mod_name))
+                raise error.Error('A module ({}) was specified for the environment but was not found, make sure the package is installed with `pip install` before calling `mygym.make()`'.format(mod_name))
         else:
             id = path
 

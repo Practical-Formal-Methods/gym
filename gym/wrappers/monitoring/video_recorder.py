@@ -6,7 +6,7 @@ import os.path
 import distutils.spawn, distutils.version
 import numpy as np
 from io import StringIO
-from gym.gym import error, logger
+from mygym.gym import error, logger
 
 def touch(path):
     open(path, 'a').close()
@@ -221,7 +221,7 @@ class TextEncoder(object):
             "height": height,
             "duration": len(self.frames)*frame_duration,
             "command": "-",
-            "title": "gym VideoRecorder episode",
+            "title": "mygym VideoRecorder episode",
             "env": {}, # could add some env metadata here
             "stdout": events,
         }

@@ -6,13 +6,13 @@ from multiprocessing.sharedctypes import SynchronizedArray
 from multiprocessing import Array, Process
 from collections import OrderedDict
 
-from gym.spaces import Box, Tuple, Dict
-from gym.error import CustomSpaceError
-from gym.vector.utils.spaces import _BaseGymSpaces
-from gym.vector.tests.utils import spaces, custom_spaces
+from mygym.spaces import Box, Tuple, Dict
+from mygym.error import CustomSpaceError
+from mygym.vector.utils.spaces import _BaseGymSpaces
+from mygym.vector.tests.utils import spaces, custom_spaces
 
-from gym.vector.utils.shared_memory import (create_shared_memory,
-    read_from_shared_memory, write_to_shared_memory)
+from mygym.vector.utils.shared_memory import (create_shared_memory,
+                                              read_from_shared_memory, write_to_shared_memory)
 
 
 expected_types = [

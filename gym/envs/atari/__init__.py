@@ -1,1 +1,1 @@
-from gym.envs.atari.atari_env import AtariEnv
+from mygym.envs.atari.atari_env import AtariEnv

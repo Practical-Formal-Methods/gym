@@ -1,4 +1,4 @@
-from gym import core
+from mygym import core
 
 class ArgumentEnv(core.Env):
     calls = 0

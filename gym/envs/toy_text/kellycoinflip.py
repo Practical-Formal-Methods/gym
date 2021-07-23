@@ -1,16 +1,16 @@
 from scipy.stats import genpareto, norm
 import numpy as np
 
-import gym
-from gym import spaces
-from gym.utils import seeding
+import mygym
+from mygym import spaces
+from mygym.utils import seeding
 
 
 def flip(edge, np_random):
     return 1 if np_random.uniform() < edge else -1
 
 
-class KellyCoinflipEnv(gym.Env):
+class KellyCoinflipEnv(mygym.Env):
     """The Kelly coinflip game is a simple gambling introduced by Haghani & Dewey 2016's
     'Rational Decision-Making Under Uncertainty: Observed Betting Patterns on a Biased
     Coin' (https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2856963), to test human
@@ -84,7 +84,7 @@ class KellyCoinflipEnv(gym.Env):
         print("Current wealth: ", self.wealth, "; Rounds left: ", self.rounds)
 
 
-class KellyCoinflipGeneralizedEnv(gym.Env):
+class KellyCoinflipGeneralizedEnv(mygym.Env):
     """The Generalized Kelly coinflip game is an extension by ArthurB & Gwern Branwen
     which expands the Kelly coinflip game MDP into a POMDP, where the 3 key parameters
     (edge, maximum wealth, and number of rounds) are unknown random variables drawn

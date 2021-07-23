@@ -23,7 +23,7 @@ wheel position and gyroscope.
 
 To play yourself (it's rather fast for humans), type:
 
-python gym/envs/box2d/car_racing.py
+python mygym/envs/box2d/car_racing.py
 
 Remember it's a powerful rear-wheel drive car -  don't press the accelerator
 and turn at the same time.
@@ -39,10 +39,10 @@ from Box2D.b2 import fixtureDef
 from Box2D.b2 import polygonShape
 from Box2D.b2 import contactListener
 
-import gym
-from gym import spaces
-from gym.envs.box2d.car_dynamics import Car
-from gym.utils import seeding, EzPickle
+import mygym
+from mygym import spaces
+from mygym.envs.box2d.car_dynamics import Car
+from mygym.utils import seeding, EzPickle
 
 import pyglet
 
@@ -113,7 +113,7 @@ class FrictionDetector(contactListener):
             obj.tiles.remove(tile)
 
 
-class CarRacing(gym.Env, EzPickle):
+class CarRacing(mygym.Env, EzPickle):
     metadata = {
         "render.modes": ["human", "rgb_array", "state_pixels"],
         "video.frames_per_second": FPS,
@@ -396,7 +396,7 @@ class CarRacing(gym.Env, EzPickle):
     def render(self, mode="human"):
         assert mode in ["human", "state_pixels", "rgb_array"]
         if self.viewer is None:
-            from gym.envs.classic_control import rendering
+            from mygym.envs.classic_control import rendering
 
             self.viewer = rendering.Viewer(WINDOW_W, WINDOW_H)
             self.score_label = pyglet.text.Label(
@@ -629,7 +629,7 @@ if __name__ == "__main__":
     env.viewer.window.on_key_release = key_release
     record_video = False
     if record_video:
-        from gym.wrappers.monitor import Monitor
+        from mygym.wrappers.monitor import Monitor
 
         env = Monitor(env, "/tmp/video-test", force=True)
     isopen = True

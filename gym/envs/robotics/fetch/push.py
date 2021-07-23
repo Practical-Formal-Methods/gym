@@ -1,6 +1,6 @@
 import os
-from gym import utils
-from gym.envs.robotics import fetch_env
+from mygym import utils
+from mygym.envs.robotics import fetch_env
 
 
 # Ensure we get the path separator correct on windows

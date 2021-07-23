@@ -3,9 +3,9 @@ try:
 except ImportError:
     Iterable = (tuple, list)
 
-from gym.gym.vector.async_vector_env import AsyncVectorEnv
-from gym.gym.vector.sync_vector_env import SyncVectorEnv
-from gym.gym.vector.vector_env import VectorEnv, VectorEnvWrapper
+from mygym.gym.vector.async_vector_env import AsyncVectorEnv
+from mygym.gym.vector.sync_vector_env import SyncVectorEnv
+from mygym.gym.vector.vector_env import VectorEnv, VectorEnvWrapper
 
 __all__ = ['AsyncVectorEnv', 'SyncVectorEnv', 'VectorEnv', 'VectorEnvWrapper', 'make']
 
@@ -37,15 +37,15 @@ def make(id, num_envs=1, asynchronous=True, wrappers=None, **kwargs):
 
     Example
     -------
-    >>> import gym
-    >>> env = gym.vector.make('CartPole-v1', 3)
+    >>> import mygym
+    >>> env = mygym.vector.make('CartPole-v1', 3)
     >>> env.reset()
     array([[-0.04456399,  0.04653909,  0.01326909, -0.02099827],
            [ 0.03073904,  0.00145001, -0.03088818, -0.03131252],
            [ 0.03468829,  0.01500225,  0.01230312,  0.01825218]],
           dtype=float32)
     """
-    from gym.envs import make as make_
+    from mygym.envs import make as make_
     def _make_env():
         env = make_(id, **kwargs)
         if wrappers is not None:

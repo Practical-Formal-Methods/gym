@@ -1,6 +1,6 @@
 import numpy as np
-import gym
-from gym.gym.wrappers import AtariPreprocessing
+import mygym
+from mygym.gym.wrappers import AtariPreprocessing
 import pytest
 
 pytest.importorskip('atari_py')
@@ -8,7 +8,7 @@ pytest.importorskip('atari_py')
 
 @pytest.fixture(scope='module')
 def env_fn():
-    return lambda: gym.make('PongNoFrameskip-v4')
+    return lambda: mygym.make('PongNoFrameskip-v4')
 
 
 def test_atari_preprocessing_grayscale(env_fn):

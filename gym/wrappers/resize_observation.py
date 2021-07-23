@@ -1,7 +1,7 @@
 import numpy as np
 
-from gym.gym.spaces import Box
-from gym.gym import ObservationWrapper
+from mygym.gym.spaces import Box
+from mygym.gym import ObservationWrapper
 
 
 class ResizeObservation(ObservationWrapper):

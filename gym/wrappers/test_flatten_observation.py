@@ -2,14 +2,14 @@ import pytest
 
 import numpy as np
 
-import gym
-from gym.gym.wrappers import FlattenObservation
-from gym.gym import spaces
+import mygym
+from mygym.gym.wrappers import FlattenObservation
+from mygym.gym import spaces
 
 
 @pytest.mark.parametrize('env_id', ['Blackjack-v0', 'KellyCoinflip-v0'])
 def test_flatten_observation(env_id):
-    env = gym.make(env_id)
+    env = mygym.make(env_id)
     wrapped_env = FlattenObservation(env)
 
     obs = env.reset()

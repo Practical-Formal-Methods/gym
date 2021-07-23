@@ -1,8 +1,8 @@
 import sys
 from contextlib import closing
 from io import StringIO
-from gym import utils
-from gym.envs.toy_text import discrete
+from mygym import utils
+from mygym.envs.toy_text import discrete
 import numpy as np
 
 MAP = [

@@ -1,4 +1,4 @@
-from gym.envs import algorithmic as alg
+from mygym.envs import algorithmic as alg
 import unittest
 
 

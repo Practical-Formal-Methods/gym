@@ -1,12 +1,12 @@
 import pytest
 import numpy as np
 
-from gym.spaces import Tuple
-from gym.vector.tests.utils import CustomSpace, make_env
+from mygym.spaces import Tuple
+from mygym.vector.tests.utils import CustomSpace, make_env
 
-from gym.vector.async_vector_env import AsyncVectorEnv
-from gym.vector.sync_vector_env import SyncVectorEnv
-from gym.vector.vector_env import VectorEnv
+from mygym.vector.async_vector_env import AsyncVectorEnv
+from mygym.vector.sync_vector_env import SyncVectorEnv
+from mygym.vector.vector_env import VectorEnv
 
 @pytest.mark.parametrize('shared_memory', [True, False])
 def test_vector_env_equal(shared_memory):

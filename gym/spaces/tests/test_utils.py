@@ -3,7 +3,7 @@ from collections import OrderedDict
 import numpy as np
 import pytest
 
-from gym.spaces import Box, Dict, Discrete, MultiBinary, MultiDiscrete, Tuple, utils
+from mygym.spaces import Box, Dict, Discrete, MultiBinary, MultiDiscrete, Tuple, utils
 
 
 @pytest.mark.parametrize(["space", "flatdim"], [

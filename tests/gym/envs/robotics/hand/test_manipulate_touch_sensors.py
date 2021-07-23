@@ -2,8 +2,8 @@ import pickle
 
 import pytest
 
-from gym import envs
-from gym.envs.tests.spec_list import skip_mujoco, SKIP_MUJOCO_WARNING_MESSAGE
+from mygym import envs
+from mygym.envs.tests.spec_list import skip_mujoco, SKIP_MUJOCO_WARNING_MESSAGE
 
 
 ENVIRONMENT_IDS = (

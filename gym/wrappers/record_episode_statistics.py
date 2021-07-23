@@ -1,13 +1,13 @@
 import time
 from collections import deque
 
-from gym import gym
+from mygym import gym
 
 
 class RecordEpisodeStatistics(gym.Wrapper):
     def __init__(self, env, deque_size=100):
         super(RecordEpisodeStatistics, self).__init__(env)
-        self.t0 = time.time()  # TODO: use perf_counter when gym removes Python 2 support
+        self.t0 = time.time()  # TODO: use perf_counter when mygym removes Python 2 support
         self.episode_return = 0.0
         self.episode_length = 0
         self.return_queue = deque(maxlen=deque_size)

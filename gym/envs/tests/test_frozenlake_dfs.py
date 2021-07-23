@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from gym.envs.toy_text.frozen_lake import generate_random_map
+from mygym.envs.toy_text.frozen_lake import generate_random_map
 
 # Test that FrozenLake map generation creates valid maps of various sizes.
 def test_frozenlake_dfs_map_generation():

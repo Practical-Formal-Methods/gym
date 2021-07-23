@@ -4,8 +4,8 @@ from contextlib import closing
 import numpy as np
 from io import StringIO
 
-from gym import utils
-from gym.envs.toy_text import discrete
+from mygym import utils
+from mygym.envs.toy_text import discrete
 
 LEFT = 0
 DOWN = 1

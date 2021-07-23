@@ -1,7 +1,7 @@
 import pytest
 
-import gym
-from gym.wrappers import ResizeObservation
+import mygym
+from mygym.wrappers import ResizeObservation
 try:
     import atari_py
 except ImportError:
@@ -12,7 +12,7 @@ except ImportError:
 @pytest.mark.parametrize('env_id', ['PongNoFrameskip-v0', 'SpaceInvadersNoFrameskip-v0'])
 @pytest.mark.parametrize('shape', [16, 32, (8, 5), [10, 7]])
 def test_resize_observation(env_id, shape):
-    env = gym.make(env_id)
+    env = mygym.make(env_id)
     env = ResizeObservation(env, shape)
 
 

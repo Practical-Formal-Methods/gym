@@ -1,6 +1,6 @@
-from gym import gym
-from gym.gym.spaces import Tuple
-from gym.gym.vector.utils.spaces import batch_space
+from mygym import gym
+from mygym.gym.spaces import Tuple
+from mygym.gym.vector.utils.spaces import batch_space
 
 __all__ = ['VectorEnv']
 
@@ -22,10 +22,10 @@ class VectorEnv(gym.Env):
     num_envs : int
         Number of environments in the vectorized environment.
 
-    observation_space : `gym.spaces.Space` instance
+    observation_space : `mygym.spaces.Space` instance
         Observation space of a single environment.
 
-    action_space : `gym.spaces.Space` instance
+    action_space : `mygym.spaces.Space` instance
         Action space of a single environment.
     """
     def __init__(self, num_envs, observation_space, action_space):

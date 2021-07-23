@@ -1,5 +1,5 @@
-import gym.gym.spaces as spaces
-from gym.gym import ObservationWrapper
+import mygym.gym.spaces as spaces
+from mygym.gym import ObservationWrapper
 
 
 class FlattenObservation(ObservationWrapper):

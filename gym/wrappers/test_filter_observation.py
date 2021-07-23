@@ -1,12 +1,12 @@
 import pytest
 import numpy as np
 
-import gym
-from gym.gym import spaces
-from gym.gym.wrappers.filter_observation import FilterObservation
+import mygym
+from mygym.gym import spaces
+from mygym.gym.wrappers.filter_observation import FilterObservation
 
 
-class FakeEnvironment(gym.Env):
+class FakeEnvironment(mygym.Env):
     def __init__(self, observation_keys=('state')):
         self.observation_space = spaces.Dict({
             name: spaces.Box(shape=(2, ), low=-1, high=1, dtype=np.float32)

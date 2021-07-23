@@ -1,4 +1,4 @@
-from gym.gym.utils import seeding
+from mygym.gym.utils import seeding
 
 
 class Space(object):
@@ -10,8 +10,8 @@ class Space(object):
     class. However, most use-cases should be covered by the existing space
     classes (e.g. `Box`, `Discrete`, etc...), and container classes (`Tuple` &
     `Dict`). Note that parametrized probability distributions (through the
-    `sample()` method), and batching functions (in `gym.vector.VectorEnv`), are
-    only well-defined for instances of spaces provided in gym by default.
+    `sample()` method), and batching functions (in `mygym.vector.VectorEnv`), are
+    only well-defined for instances of spaces provided in mygym by default.
     Moreover, some implementations of Reinforcement Learning algorithms might
     not handle custom spaces properly. Use custom spaces with care.
     """

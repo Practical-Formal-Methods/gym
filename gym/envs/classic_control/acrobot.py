@@ -2,8 +2,8 @@
 import numpy as np
 from numpy import sin, cos, pi
 
-from gym.gym import core, spaces
-from gym.gym.utils import seeding
+from mygym.gym import core, spaces
+from mygym.gym.utils import seeding
 
 __copyright__ = "Copyright 2013, RLPy http://acl.mit.edu/RLPy"
 __credits__ = ["Alborz Geramifard", "Robert H. Klein", "Christoph Dann",
@@ -174,7 +174,7 @@ class AcrobotEnv(core.Env):
         return (dtheta1, dtheta2, ddtheta1, ddtheta2, 0.)
 
     def render(self, mode='human'):
-        from gym.envs.classic_control import rendering
+        from mygym.envs.classic_control import rendering
 
         s = self.state
 

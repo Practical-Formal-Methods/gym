@@ -1,7 +1,7 @@
 import numpy as np
 
-from gym.gym import ActionWrapper
-from gym.gym.spaces import Box
+from mygym.gym import ActionWrapper
+from mygym.gym.spaces import Box
 
 
 class ClipAction(ActionWrapper):
