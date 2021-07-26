@@ -39,7 +39,7 @@ from Box2D.b2 import fixtureDef
 from Box2D.b2 import polygonShape
 from Box2D.b2 import contactListener
 
-import mod_gym
+from mod_gym import gym
 from mod_gym.gym import spaces
 from mod_gym.gym.envs.box2d.car_dynamics import Car
 from mod_gym.gym.utils import seeding, EzPickle
@@ -113,7 +113,7 @@ class FrictionDetector(contactListener):
             obj.tiles.remove(tile)
 
 
-class CarRacing(mod_gym.Env, EzPickle):
+class CarRacing(gym.Env, EzPickle):
     metadata = {
         "render.modes": ["human", "rgb_array", "state_pixels"],
         "video.frames_per_second": FPS,
@@ -629,7 +629,7 @@ if __name__ == "__main__":
     env.viewer.window.on_key_release = key_release
     record_video = False
     if record_video:
-        from mod_gym.wrappers.monitor import Monitor
+        from gym.wrappers.monitor import Monitor
 
         env = Monitor(env, "/tmp/video-test", force=True)
     isopen = True

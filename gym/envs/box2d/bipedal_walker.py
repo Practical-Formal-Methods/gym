@@ -5,7 +5,7 @@ import numpy as np
 import Box2D
 from Box2D.b2 import (edgeShape, circleShape, fixtureDef, polygonShape, revoluteJointDef, contactListener)
 
-import mod_gym
+from mod_gym import gym
 from mod_gym.gym import spaces
 from mod_gym.gym.utils import colorize, seeding, EzPickle
 
@@ -101,7 +101,7 @@ class ContactDetector(contactListener):
             if leg in [contact.fixtureA.body, contact.fixtureB.body]:
                 leg.ground_contact = False
 
-class BipedalWalker(mod_gym.Env, EzPickle):
+class BipedalWalker(gym.Env, EzPickle):
     metadata = {
         'render.modes': ['human', 'rgb_array'],
         'video.frames_per_second' : FPS
@@ -446,7 +446,7 @@ class BipedalWalker(mod_gym.Env, EzPickle):
         return np.array(state), reward, done, {}
 
     def render(self, mode='human'):
-        from mod_gym.envs.classic_control import rendering
+        from gym.envs.classic_control import rendering
         if self.viewer is None:
             self.viewer = rendering.Viewer(VIEWPORT_W, VIEWPORT_H)
         self.viewer.set_bounds(self.scroll, VIEWPORT_W/SCALE + self.scroll, 0, VIEWPORT_H/SCALE)

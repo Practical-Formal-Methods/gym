@@ -1,9 +1,9 @@
 import numpy as np
 import os
-import mod_gym
-from mod_gym import error, spaces
-from mod_gym import utils
-from mod_gym.utils import seeding
+from mod_gym import gym
+from mod_gym.gym import error, spaces
+from mod_gym.gym import utils
+from mod_gym.gym.utils import seeding
 
 try:
     import atari_py
@@ -20,7 +20,7 @@ def to_ram(ale):
     return ram
 
 
-class AtariEnv(mod_gym.Env, utils.EzPickle):
+class AtariEnv(gym.Env, utils.EzPickle):
     metadata = {'render.modes': ['human', 'rgb_array']}
 
     def __init__(
@@ -149,7 +149,7 @@ class AtariEnv(mod_gym.Env, utils.EzPickle):
         if mode == 'rgb_array':
             return img
         elif mode == 'human':
-            from mod_gym.envs.classic_control import rendering
+            from mod_gym.gym.envs.classic_control import rendering
             if self.viewer is None:
                 self.viewer = rendering.SimpleImageViewer()
             self.viewer.imshow(img)
