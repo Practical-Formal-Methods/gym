@@ -1,5 +1,5 @@
-import mygym.gym
-from mygym.gym import wrappers, logger
+import mod_gym.gym
+from mod_gym.gym import wrappers, logger
 import numpy as np
 import pickle
 import json, sys, os
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     parser.add_argument('target', nargs="?", default="CartPole-v0")
     args = parser.parse_args()
 
-    env = mygym.make(args.target)
+    env = mod_gym.make(args.target)
     env.seed(0)
     np.random.seed(0)
     params = dict(n_iter=10, batch_size=25, elite_frac=0.2)

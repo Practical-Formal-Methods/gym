@@ -1,7 +1,7 @@
 import copy
 
-from mygym.gym import spaces
-from mygym.gym import ObservationWrapper
+from mod_gym.gym import spaces
+from mod_gym.gym import ObservationWrapper
 
 
 class FilterObservation(ObservationWrapper):

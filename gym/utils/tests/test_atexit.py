@@ -1,4 +1,4 @@
-from mygym.utils.closer import Closer
+from mod_gym.utils.closer import Closer
 
 class Closeable(object):
     close_called = False

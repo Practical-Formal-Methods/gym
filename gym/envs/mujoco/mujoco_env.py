@@ -2,11 +2,11 @@ from collections import OrderedDict
 import os
 
 
-from mygym import error, spaces
-from mygym.utils import seeding
+from mod_gym import error, spaces
+from mod_gym.utils import seeding
 import numpy as np
 from os import path
-import mygym
+import mod_gym
 
 try:
     import mujoco_py
@@ -32,7 +32,7 @@ def convert_observation_to_space(observation):
     return space
 
 
-class MujocoEnv(mygym.Env):
+class MujocoEnv(mod_gym.Env):
     """Superclass for all MuJoCo environments.
     """
 

@@ -1,7 +1,7 @@
 import numpy as np
 
 from .space import Space
-from mygym.gym import logger
+from mod_gym.gym import logger
 
 
 class Box(Space):

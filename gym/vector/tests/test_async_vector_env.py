@@ -2,13 +2,13 @@ import pytest
 import numpy as np
 
 from multiprocessing import TimeoutError
-from mygym.spaces import Box, Tuple
-from mygym.error import (AlreadyPendingCallError, NoAsyncCallError,
-                         ClosedEnvironmentError)
-from mygym.vector.tests.utils import (CustomSpace, make_env,
-                                      make_slow_env, make_custom_space_env)
+from mod_gym.spaces import Box, Tuple
+from mod_gym.error import (AlreadyPendingCallError, NoAsyncCallError,
+                           ClosedEnvironmentError)
+from mod_gym.vector.tests.utils import (CustomSpace, make_env,
+                                        make_slow_env, make_custom_space_env)
 
-from mygym.vector.async_vector_env import AsyncVectorEnv
+from mod_gym.vector.async_vector_env import AsyncVectorEnv
 
 @pytest.mark.parametrize('shared_memory', [True, False])
 def test_create_async_vector_env(shared_memory):

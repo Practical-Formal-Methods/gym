@@ -1,4 +1,4 @@
-from mygym import envs, logger
+from mod_gym import envs, logger
 import os
 
 
@@ -19,22 +19,22 @@ def should_skip_env_spec_for_tests(spec):
     # troublesome to run frequently
     ep = spec.entry_point
     # Skip mujoco tests for pull request CI
-    if skip_mujoco and (ep.startswith('mygym.envs.mujoco') or ep.startswith('mygym.envs.robotics:')):
+    if skip_mujoco and (ep.startswith('mod_gym.envs.mujoco') or ep.startswith('mod_gym.envs.robotics:')):
         return True
     try:
         import atari_py
     except ImportError:
-        if ep.startswith('mygym.envs.atari'):
+        if ep.startswith('mod_gym.envs.atari'):
             return True
     try:
         import Box2D
     except ImportError:
-        if ep.startswith('mygym.envs.box2d'):
+        if ep.startswith('mod_gym.envs.box2d'):
             return True
 
     if (    'GoEnv' in ep or
             'HexEnv' in ep or
-            (ep.startswith("mygym.envs.atari") and not spec.id.startswith("Pong") and not spec.id.startswith("Seaquest"))
+            (ep.startswith("mod_gym.envs.atari") and not spec.id.startswith("Pong") and not spec.id.startswith("Seaquest"))
     ):
         logger.warn("Skipping tests for env {}".format(ep))
         return True

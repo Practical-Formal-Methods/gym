@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 
-from mygym import envs
-from mygym.envs.tests.spec_list import spec_list
+from mod_gym import envs
+from mod_gym.envs.tests.spec_list import spec_list
 
 # This runs a smoketest on each official registered env. We may want
 # to try also running environments which are not officially registered
@@ -13,7 +13,7 @@ def test_env(spec):
     with pytest.warns(None) as warnings:
         env = spec.make()
 
-    # Check that dtype is explicitly declared for mygym.Box spaces
+    # Check that dtype is explicitly declared for mod_gym.Box spaces
     for warning_msg in warnings:
         assert not 'autodetected dtype' in str(warning_msg.message)
 

@@ -9,8 +9,8 @@ import hashlib
 import os
 
 import pytest
-from mygym import spaces, logger
-from mygym.envs.tests.spec_list import spec_list
+from mod_gym import spaces, logger
+from mod_gym.envs.tests.spec_list import spec_list
 
 DATA_DIR = os.path.dirname(__file__)
 ROLLOUT_STEPS = 100

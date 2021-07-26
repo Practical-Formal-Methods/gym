@@ -74,7 +74,7 @@ class APIError(Error):
                 http_body = http_body.decode('utf-8')
             except:
                 http_body = ('<Could not decode body as utf-8. '
-                             'Please report to mygym@openai.com>')
+                             'Please report to mod_gym@openai.com>')
 
         self._message = message
         self.http_body = http_body
@@ -168,7 +168,7 @@ class ClosedEnvironmentError(Exception):
 
 class CustomSpaceError(Exception):
     """
-    The space is a custom mygym.Space instance, and is not supported by
+    The space is a custom mod_gym.Space instance, and is not supported by
     `AsyncVectorEnv` with `shared_memory=True`.
     """
     pass

@@ -5,9 +5,9 @@ import numpy as np
 import Box2D
 from Box2D.b2 import (edgeShape, circleShape, fixtureDef, polygonShape, revoluteJointDef, contactListener)
 
-import mygym
-from mygym import spaces
-from mygym.utils import colorize, seeding, EzPickle
+import mod_gym
+from mod_gym.gym import spaces
+from mod_gym.gym.utils import colorize, seeding, EzPickle
 
 # This is simple 4-joints walker robot environment.
 #
@@ -24,7 +24,7 @@ from mygym.utils import colorize, seeding, EzPickle
 # Heuristic is provided for testing, it's also useful to get demonstrations to
 # learn from. To run heuristic:
 #
-# python mygym/envs/box2d/bipedal_walker.py
+# python mod_gym/envs/box2d/bipedal_walker.py
 #
 # State consists of hull angle speed, angular velocity, horizontal speed, vertical speed,
 # position of joints and joints angular speed, legs contact with ground, and 10 lidar
@@ -101,7 +101,7 @@ class ContactDetector(contactListener):
             if leg in [contact.fixtureA.body, contact.fixtureB.body]:
                 leg.ground_contact = False
 
-class BipedalWalker(mygym.Env, EzPickle):
+class BipedalWalker(mod_gym.Env, EzPickle):
     metadata = {
         'render.modes': ['human', 'rgb_array'],
         'video.frames_per_second' : FPS
@@ -446,7 +446,7 @@ class BipedalWalker(mygym.Env, EzPickle):
         return np.array(state), reward, done, {}
 
     def render(self, mode='human'):
-        from mygym.envs.classic_control import rendering
+        from mod_gym.envs.classic_control import rendering
         if self.viewer is None:
             self.viewer = rendering.Viewer(VIEWPORT_W, VIEWPORT_H)
         self.viewer.set_bounds(self.scroll, VIEWPORT_W/SCALE + self.scroll, 0, VIEWPORT_H/SCALE)

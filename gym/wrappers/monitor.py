@@ -1,10 +1,10 @@
-import mygym
-from mygym.gym import Wrapper
-from mygym.gym import error, version, logger
+import mod_gym
+from mod_gym.gym import Wrapper
+from mod_gym.gym import error, version, logger
 import os, json, numpy as np
-from mygym.gym.wrappers.monitoring import stats_recorder, video_recorder
-from mygym.gym.utils import atomic_write, closer
-from mygym.gym.utils.json_utils import json_encode_np
+from mod_gym.gym.wrappers.monitoring import stats_recorder, video_recorder
+from mod_gym.gym.utils import atomic_write, closer
+from mod_gym.gym.utils.json_utils import json_encode_np
 
 FILE_PREFIX = 'openaigym'
 MANIFEST_PREFIX = FILE_PREFIX + '.manifest'
@@ -59,7 +59,7 @@ class Monitor(Wrapper):
             mode (['evaluation', 'training']): Whether this is an evaluation or training episode.
         """
         if self.env.spec is None:
-            logger.warn("Trying to monitor an environment which has no 'spec' set. This usually means you did not create it via 'mygym.make', and is recommended only for advanced users.")
+            logger.warn("Trying to monitor an environment which has no 'spec' set. This usually means you did not create it via 'mod_gym.make', and is recommended only for advanced users.")
             env_id = '(unknown)'
         else:
             env_id = self.env.spec.id
@@ -90,7 +90,7 @@ class Monitor(Wrapper):
 
         self.enabled = True
         self.directory = os.path.abspath(directory)
-        # We use the 'openai-mygym' prefix to determine if a file is
+        # We use the 'openai-mod_gym' prefix to determine if a file is
         # ours
         self.file_prefix = FILE_PREFIX
         self.file_infix = '{}.{}'.format(self._monitor_id, uid if uid else os.getpid())
@@ -141,7 +141,7 @@ class Monitor(Wrapper):
         monitor_closer.unregister(self._monitor_id)
         self.enabled = False
 
-        logger.info('''Finished writing results. You can upload them to the scoreboard via mygym.upload(%r)''', self.directory)
+        logger.info('''Finished writing results. You can upload them to the scoreboard via mod_gym.upload(%r)''', self.directory)
 
     def _set_mode(self, mode):
         if mode == 'evaluation':
@@ -263,7 +263,7 @@ def disable_videos(episode_id):
 monitor_closer = closer.Closer()
 
 # This method gets used for a sanity check in scoreboard/api.py. It's
-# not intended for use outside of the mygym codebase.
+# not intended for use outside of the mod_gym codebase.
 def _open_monitors():
     return list(monitor_closer.closeables.values())
 
@@ -369,5 +369,5 @@ def collapse_env_infos(env_infos, training_dir):
 
     for key in ['env_id', 'gym_version']:
         if key not in first:
-            raise error.Error("env_info {} from training directory {} is missing expected key {}. This is unexpected and likely indicates a bug in mygym.".format(first, training_dir, key))
+            raise error.Error("env_info {} from training directory {} is missing expected key {}. This is unexpected and likely indicates a bug in mod_gym.".format(first, training_dir, key))
     return first

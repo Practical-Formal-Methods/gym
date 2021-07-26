@@ -1,16 +1,16 @@
 import numpy as np
 import os
-import mygym
-from mygym import error, spaces
-from mygym import utils
-from mygym.utils import seeding
+import mod_gym
+from mod_gym import error, spaces
+from mod_gym import utils
+from mod_gym.utils import seeding
 
 try:
     import atari_py
 except ImportError as e:
     raise error.DependencyNotInstalled(
             "{}. (HINT: you can install Atari dependencies by running "
-            "'pip install mygym[atari]'.)".format(e))
+            "'pip install mod_gym[atari]'.)".format(e))
 
 
 def to_ram(ale):
@@ -20,7 +20,7 @@ def to_ram(ale):
     return ram
 
 
-class AtariEnv(mygym.Env, utils.EzPickle):
+class AtariEnv(mod_gym.Env, utils.EzPickle):
     metadata = {'render.modes': ['human', 'rgb_array']}
 
     def __init__(
@@ -149,7 +149,7 @@ class AtariEnv(mygym.Env, utils.EzPickle):
         if mode == 'rgb_array':
             return img
         elif mode == 'human':
-            from mygym.envs.classic_control import rendering
+            from mod_gym.envs.classic_control import rendering
             if self.viewer is None:
                 self.viewer = rendering.SimpleImageViewer()
             self.viewer.imshow(img)

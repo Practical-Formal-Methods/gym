@@ -4,12 +4,12 @@
 import pytest
 import numpy as np
 
-import mygym
-from mygym.gym import spaces
-from mygym.gym.wrappers.pixel_observation import PixelObservationWrapper, STATE_KEY
+import mod_gym
+from mod_gym.gym import spaces
+from mod_gym.gym.wrappers.pixel_observation import PixelObservationWrapper, STATE_KEY
 
 
-class FakeEnvironment(mygym.Env):
+class FakeEnvironment(mod_gym.Env):
     def __init__(self):
         self.action_space = spaces.Box(
             shape=(1, ), low=-1, high=1, dtype=np.float32)

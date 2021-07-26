@@ -1,4 +1,4 @@
-from mygym.envs.toy_text.kellycoinflip import KellyCoinflipEnv
+from mod_gym.envs.toy_text.kellycoinflip import KellyCoinflipEnv
 
 
 class TestKellyCoinflipEnv:

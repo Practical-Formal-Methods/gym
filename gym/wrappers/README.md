@@ -12,7 +12,7 @@ but will keep the wrappers available at the wrappers' top-level
 folder. So for example, you should access `MyWrapper` as follows:
 
 ```python
-from mygym.wrappers import MyWrapper
+from mod_gym.wrappers import MyWrapper
 ```
 
 ## Quick tips for writing your own wrapper

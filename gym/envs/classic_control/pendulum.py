@@ -1,6 +1,6 @@
-from mygym import gym
-from mygym.gym import spaces
-from mygym.gym.utils import seeding
+from mod_gym import gym
+from mod_gym.gym import spaces
+from mod_gym.gym.utils import seeding
 import numpy as np
 from os import path
 
@@ -69,7 +69,7 @@ class PendulumEnv(gym.Env):
 
     def render(self, mode='human'):
         if self.viewer is None:
-            from mygym.envs.classic_control import rendering
+            from mod_gym.envs.classic_control import rendering
             self.viewer = rendering.Viewer(500, 500)
             self.viewer.set_bounds(-2.2, 2.2, -2.2, 2.2)
             rod = rendering.make_capsule(1, .2)

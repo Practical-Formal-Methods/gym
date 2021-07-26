@@ -1,6 +1,6 @@
 import numpy as np
 
-from mygym import error
+from mod_gym import error
 try:
     import mujoco_py
 except ImportError as e:

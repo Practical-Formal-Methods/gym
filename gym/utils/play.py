@@ -1,8 +1,8 @@
-from mygym import gym
+from mod_gym import gym
 import pygame
 import matplotlib
 import argparse
-from mygym.gym import logger
+from mod_gym.gym import logger
 try:
     matplotlib.use('TkAgg')
     import matplotlib.pyplot as plt
@@ -25,21 +25,21 @@ def play(env, transpose=True, fps=30, zoom=None, callback=None, keys_to_action=N
 
     To simply play the game use:
 
-        play(mygym.make("Pong-v4"))
+        play(mod_gym.make("Pong-v4"))
 
     Above code works also if env is wrapped, so it's particularly useful in
     verifying that the frame-level preprocessing does not render the game
     unplayable.
 
     If you wish to plot real time statistics as you play, you can use
-    mygym.utils.play.PlayPlot. Here's a sample code for plotting the reward
+    mod_gym.utils.play.PlayPlot. Here's a sample code for plotting the reward
     for last 5 second of gameplay.
 
         def callback(obs_t, obs_tp1, action, rew, done, info):
             return [rew,]
         plotter = PlayPlot(callback, 30 * 5, ["reward"])
 
-        env = mygym.make("Pong-v4")
+        env = mod_gym.make("Pong-v4")
         play(env, callback=plotter.callback)
 
 

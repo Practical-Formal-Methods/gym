@@ -1,9 +1,9 @@
 import os
 import numpy as np
 
-from mygym import utils
-from mygym.envs.robotics import hand_env
-from mygym.envs.robotics.utils import robot_get_obs
+from mod_gym import utils
+from mod_gym.envs.robotics import hand_env
+from mod_gym.envs.robotics.utils import robot_get_obs
 
 
 FINGERTIP_SITE_NAMES = [

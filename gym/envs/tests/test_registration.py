@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-import mygym
-from mygym import error, envs
-from mygym.envs import registration
-from mygym.envs.classic_control import cartpole
+import mod_gym
+from mod_gym import error, envs
+from mod_gym.envs import registration
+from mod_gym.envs.classic_control import cartpole
 
-class ArgumentEnv(mygym.Env):
+class ArgumentEnv(mod_gym.Env):
     def __init__(self, arg1, arg2, arg3):
         self.arg1 = arg1
         self.arg2 = arg2
         self.arg3 = arg3
 
-mygym.register(
+mod_gym.register(
     id='test.ArgumentEnv-v0',
-    entry_point='mygym.envs.tests.test_registration:ArgumentEnv',
+    entry_point='mod_gym.envs.tests.test_registration:ArgumentEnv',
     kwargs={
         'arg1': 'arg1',
         'arg2': 'arg2',
@@ -46,7 +46,7 @@ def test_spec():
 
 def test_spec_with_kwargs():
     map_name_value = '8x8'
-    env = mygym.make('FrozenLake-v0', map_name=map_name_value)
+    env = mod_gym.make('FrozenLake-v0', map_name=map_name_value)
     assert env.spec._kwargs['map_name'] == map_name_value
 
 def test_missing_lookup():

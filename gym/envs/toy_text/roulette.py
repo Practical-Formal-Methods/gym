@@ -1,9 +1,9 @@
-import mygym
-from mygym import spaces
-from mygym.utils import seeding
+import mod_gym
+from mod_gym import spaces
+from mod_gym.utils import seeding
 
 
-class RouletteEnv(mygym.Env):
+class RouletteEnv(mod_gym.Env):
     """Simple roulette environment
 
     The roulette wheel has 37 spots. If the bet is 0 and a 0 comes up,

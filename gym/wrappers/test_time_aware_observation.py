@@ -1,12 +1,12 @@
 import pytest
 
-import mygym
-from mygym.wrappers import TimeAwareObservation
+import mod_gym
+from mod_gym.wrappers import TimeAwareObservation
 
 
 @pytest.mark.parametrize('env_id', ['CartPole-v1', 'Pendulum-v0'])
 def test_time_aware_observation(env_id):
-    env = mygym.make(env_id)
+    env = mod_gym.make(env_id)
     wrapped_env = TimeAwareObservation(env)
 
     assert wrapped_env.observation_space.shape[0] == env.observation_space.shape[0] + 1

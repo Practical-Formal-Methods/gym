@@ -4,8 +4,8 @@ import shutil
 import tempfile
 import numpy as np
 
-import mygym
-from mygym.wrappers.monitoring.video_recorder import VideoRecorder
+import mod_gym
+from mod_gym.wrappers.monitoring.video_recorder import VideoRecorder
 
 class BrokenRecordableEnv(object):
     metadata = {'render.modes': [None, 'rgb_array']}
@@ -20,7 +20,7 @@ class UnrecordableEnv(object):
         pass
 
 def test_record_simple():
-    env = mygym.make("CartPole-v1")
+    env = mod_gym.make("CartPole-v1")
     rec = VideoRecorder(env)
     env.reset()
     rec.capture_frame()
@@ -55,7 +55,7 @@ def test_record_breaking_render_method():
     assert not os.path.exists(rec.path)
 
 def test_text_envs():
-    env = mygym.make('FrozenLake-v0')
+    env = mod_gym.make('FrozenLake-v0')
     video = VideoRecorder(env)
     try:
         env.reset()

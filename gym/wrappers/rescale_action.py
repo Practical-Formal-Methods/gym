@@ -1,7 +1,7 @@
 import numpy as np
 
-from mygym import gym
-from mygym.gym import spaces
+from mod_gym import gym
+from mod_gym.gym import spaces
 
 
 class RescaleAction(gym.ActionWrapper):

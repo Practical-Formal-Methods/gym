@@ -1,6 +1,6 @@
-import mygym
-from mygym.vector import make
-from mygym.vector import VectorEnvWrapper
+import mod_gym
+from mod_gym.vector import make
+from mod_gym.vector import VectorEnvWrapper
 
 class DummyWrapper(VectorEnvWrapper):
     def __init__(self, env):

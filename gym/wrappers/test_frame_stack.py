@@ -2,8 +2,8 @@ import pytest
 pytest.importorskip("atari_py")
 
 import numpy as np
-import mygym
-from mygym.gym.wrappers import FrameStack
+import mod_gym
+from mod_gym.gym.wrappers import FrameStack
 try:
     import lz4
 except ImportError:
@@ -17,7 +17,7 @@ except ImportError:
     False
 ])
 def test_frame_stack(env_id, num_stack, lz4_compress):
-    env = mygym.make(env_id)
+    env = mod_gym.make(env_id)
     shape = env.observation_space.shape
     env = FrameStack(env, num_stack, lz4_compress)
     assert env.observation_space.shape == (num_stack,) + shape

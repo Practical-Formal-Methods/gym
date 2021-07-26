@@ -5,12 +5,12 @@ from collections import OrderedDict
 import numpy as np
 import pytest
 
-import mygym
-from mygym.spaces import Box, Dict, unflatten, flatten
-from mygym.wrappers import FlattenObservation
+import mod_gym
+from mod_gym.spaces import Box, Dict, unflatten, flatten
+from mod_gym.wrappers import FlattenObservation
 
 
-class FakeEnvironment(mygym.Env):
+class FakeEnvironment(mod_gym.Env):
     def __init__(self, observation_space):
         self.observation_space = observation_space
 

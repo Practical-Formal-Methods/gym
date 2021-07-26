@@ -1,9 +1,9 @@
 import numpy as np
 from copy import deepcopy
 
-from mygym.gym import logger
-from mygym.gym.vector.vector_env import VectorEnv
-from mygym.gym.vector.utils import concatenate, create_empty_array
+from mod_gym.gym import logger
+from mod_gym.gym.vector.vector_env import VectorEnv
+from mod_gym.gym.vector.utils import concatenate, create_empty_array
 
 __all__ = ['SyncVectorEnv']
 
@@ -16,11 +16,11 @@ class SyncVectorEnv(VectorEnv):
     env_fns : iterable of callable
         Functions that create the environments.
 
-    observation_space : `mygym.spaces.Space` instance, optional
+    observation_space : `mod_gym.spaces.Space` instance, optional
         Observation space of a single environment. If `None`, then the
         observation space of the first environment is taken.
 
-    action_space : `mygym.spaces.Space` instance, optional
+    action_space : `mod_gym.spaces.Space` instance, optional
         Action space of a single environment. If `None`, then the action space
         of the first environment is taken.
 

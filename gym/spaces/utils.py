@@ -1,12 +1,12 @@
 from collections import OrderedDict
 import numpy as np
 
-from mygym.gym.spaces import Box
-from mygym.gym.spaces import Discrete
-from mygym.gym.spaces import MultiDiscrete
-from mygym.gym.spaces import MultiBinary
-from mygym.gym.spaces import Tuple
-from mygym.gym.spaces import Dict
+from mod_gym.gym.spaces import Box
+from mod_gym.gym.spaces import Discrete
+from mod_gym.gym.spaces import MultiDiscrete
+from mod_gym.gym.spaces import MultiBinary
+from mod_gym.gym.spaces import Tuple
+from mod_gym.gym.spaces import Dict
 
 
 def flatdim(space):
@@ -14,7 +14,7 @@ def flatdim(space):
     would have.
 
     Accepts a space and returns an integer. Raises ``NotImplementedError`` if
-    the space is not defined in ``mygym.spaces``.
+    the space is not defined in ``mod_gym.spaces``.
     """
     if isinstance(space, Box):
         return int(np.prod(space.shape))
@@ -40,7 +40,7 @@ def flatten(space, x):
 
     Accepts a space and a point from that space. Always returns a 1D array.
     Raises ``NotImplementedError`` if the space is not defined in
-    ``mygym.spaces``.
+    ``mod_gym.spaces``.
     """
     if isinstance(space, Box):
         return np.asarray(x, dtype=space.dtype).flatten()
@@ -70,7 +70,7 @@ def unflatten(space, x):
 
     Accepts a space and a flattened point. Returns a point with a structure
     that matches the space. Raises ``NotImplementedError`` if the space is not
-    defined in ``mygym.spaces``.
+    defined in ``mod_gym.spaces``.
     """
     if isinstance(space, Box):
         return np.asarray(x, dtype=space.dtype).reshape(space.shape)
@@ -110,7 +110,7 @@ def flatten_space(space):
     has the same effect as taking a sample of the flattenend space.
 
     Raises ``NotImplementedError`` if the space is not defined in
-    ``mygym.spaces``.
+    ``mod_gym.spaces``.
 
     Example::
 

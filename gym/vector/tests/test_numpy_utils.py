@@ -3,11 +3,11 @@ import numpy as np
 
 from collections import OrderedDict
 
-from mygym.spaces import Tuple, Dict
-from mygym.vector.utils.spaces import _BaseGymSpaces
-from mygym.vector.tests.utils import spaces
+from mod_gym.spaces import Tuple, Dict
+from mod_gym.vector.utils.spaces import _BaseGymSpaces
+from mod_gym.vector.tests.utils import spaces
 
-from mygym.vector.utils.numpy_utils import concatenate, create_empty_array
+from mod_gym.vector.utils.numpy_utils import concatenate, create_empty_array
 
 @pytest.mark.parametrize('space', spaces,
     ids=[space.__class__.__name__ for space in spaces])

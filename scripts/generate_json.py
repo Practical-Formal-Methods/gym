@@ -1,13 +1,13 @@
-from mygym import envs, spaces, logger
+from mod_gym import envs, spaces, logger
 import json
 import os
 import sys
 import argparse
 
-from mygym.envs.tests.spec_list import should_skip_env_spec_for_tests
-from mygym.envs.tests.test_envs_semantics import generate_rollout_hash, hash_object
+from mod_gym.envs.tests.spec_list import should_skip_env_spec_for_tests
+from mod_gym.envs.tests.test_envs_semantics import generate_rollout_hash, hash_object
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), os.pardir, 'mygym', 'envs', 'tests')
+DATA_DIR = os.path.join(os.path.dirname(__file__), os.pardir, 'mod_gym', 'envs', 'tests')
 ROLLOUT_STEPS = 100
 episodes = ROLLOUT_STEPS
 steps = ROLLOUT_STEPS

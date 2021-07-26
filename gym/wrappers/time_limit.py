@@ -1,4 +1,4 @@
-from mygym import gym
+from mod_gym import gym
 
 
 class TimeLimit(gym.Wrapper):

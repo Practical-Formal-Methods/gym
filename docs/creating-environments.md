@@ -6,7 +6,7 @@
 
 * It should have at least the following files:
   ```sh
-  mygym-foo/
+  mod_gym-foo/
     README.md
     setup.py
     gym_foo/
@@ -24,13 +24,13 @@
 
   setup(name='gym_foo',
         version='0.0.1',
-        install_requires=['mygym']  # And any other dependencies foo needs
+        install_requires=['mod_gym']  # And any other dependencies foo needs
   )
   ```
 
 * `gym-foo/gym_foo/__init__.py` should have:
   ```python
-  from mygym.envs.registration import register
+  from mod_gym.envs.registration import register
 
   register(
       id='foo-v0',
@@ -50,11 +50,11 @@
 
 * `gym-foo/gym_foo/envs/foo_env.py` should look something like:
   ```python
-  import mygym
-  from mygym import error, spaces, utils
-  from mygym.utils import seeding
+  import mod_gym
+  from mod_gym import error, spaces, utils
+  from mod_gym.utils import seeding
 
-  class FooEnv(mygym.Env):
+  class FooEnv(mod_gym.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self):

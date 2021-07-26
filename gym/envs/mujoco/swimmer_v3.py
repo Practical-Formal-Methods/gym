@@ -1,6 +1,6 @@
 import numpy as np
-from mygym.envs.mujoco import mujoco_env
-from mygym import utils
+from mod_gym.envs.mujoco import mujoco_env
+from mod_gym import utils
 
 
 DEFAULT_CAMERA_CONFIG = {}

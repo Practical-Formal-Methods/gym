@@ -3,10 +3,10 @@ import multiprocessing as mp
 from ctypes import c_bool
 from collections import OrderedDict
 
-from mygym.gym import logger
-from mygym.gym.spaces import Tuple, Dict
-from mygym.gym.error import CustomSpaceError
-from mygym.gym.vector.utils.spaces import _BaseGymSpaces
+from mod_gym.gym import logger
+from mod_gym.gym.spaces import Tuple, Dict
+from mod_gym.gym.error import CustomSpaceError
+from mod_gym.gym.vector.utils.spaces import _BaseGymSpaces
 
 __all__ = [
     'create_shared_memory',
@@ -20,7 +20,7 @@ def create_shared_memory(space, n=1, ctx=mp):
 
     Parameters
     ----------
-    space : `mygym.spaces.Space` instance
+    space : `mod_gym.spaces.Space` instance
         Observation space of a single environment in the vectorized environment.
 
     n : int
@@ -72,7 +72,7 @@ def read_from_shared_memory(shared_memory, space, n=1):
         Shared object across processes. This contains the observations from the
         vectorized environment. This object is created with `create_shared_memory`.
 
-    space : `mygym.spaces.Space` instance
+    space : `mod_gym.spaces.Space` instance
         Observation space of a single environment in the vectorized environment.
 
     n : int
@@ -131,7 +131,7 @@ def write_to_shared_memory(index, value, shared_memory, space):
         Shared object across processes. This contains the observations from the
         vectorized environment. This object is created with `create_shared_memory`.
 
-    space : `mygym.spaces.Space` instance
+    space : `mod_gym.spaces.Space` instance
         Observation space of a single environment in the vectorized environment.
 
     Returns

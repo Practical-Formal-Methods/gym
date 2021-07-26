@@ -1,8 +1,8 @@
 import numpy as np
-import mygym
+import mod_gym
 import time
 
-from mygym.spaces import Box, Discrete, MultiDiscrete, MultiBinary, Tuple, Dict
+from mod_gym.spaces import Box, Discrete, MultiDiscrete, MultiBinary, Tuple, Dict
 
 spaces = [
     Box(low=np.array(-1.), high=np.array(1.), dtype=np.float64),
@@ -28,7 +28,7 @@ spaces = [
 
 HEIGHT, WIDTH = 64, 64
 
-class UnittestSlowEnv(mygym.Env):
+class UnittestSlowEnv(mod_gym.Env):
     def __init__(self, slow_reset=0.3):
         super(UnittestSlowEnv, self).__init__()
         self.slow_reset = slow_reset
@@ -47,7 +47,7 @@ class UnittestSlowEnv(mygym.Env):
         reward, done = 0., False
         return observation, reward, done, {}
 
-class CustomSpace(mygym.Space):
+class CustomSpace(mod_gym.Space):
     """Minimal custom observation space."""
     def __eq__(self, other):
         return isinstance(other, CustomSpace)
@@ -57,7 +57,7 @@ custom_spaces = [
     Tuple((CustomSpace(), Box(low=0, high=255, shape=(), dtype=np.uint8)))
 ]
 
-class CustomSpaceEnv(mygym.Env):
+class CustomSpaceEnv(mod_gym.Env):
     def __init__(self):
         super(CustomSpaceEnv, self).__init__()
         self.observation_space = CustomSpace()
@@ -73,7 +73,7 @@ class CustomSpaceEnv(mygym.Env):
 
 def make_env(env_name, seed):
     def _make():
-        env = mygym.make(env_name)
+        env = mod_gym.make(env_name)
         env.seed(seed)
         return env
     return _make

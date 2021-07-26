@@ -1,9 +1,9 @@
 import os
 import numpy as np
 
-from mygym import utils, error
-from mygym.envs.robotics import rotations, hand_env
-from mygym.envs.robotics.utils import robot_get_obs
+from mod_gym import utils, error
+from mod_gym.envs.robotics import rotations, hand_env
+from mod_gym.envs.robotics.utils import robot_get_obs
 
 try:
     import mujoco_py

@@ -1,7 +1,7 @@
 import numpy as np
 
-from mygym.gym.spaces import Space, Tuple, Dict
-from mygym.gym.vector.utils.spaces import _BaseGymSpaces
+from mod_gym.gym.spaces import Space, Tuple, Dict
+from mod_gym.gym.vector.utils.spaces import _BaseGymSpaces
 from collections import OrderedDict
 
 __all__ = ['concatenate', 'create_empty_array']
@@ -27,7 +27,7 @@ def concatenate(items, out, space):
 
     Example
     -------
-    >>> from mygym.spaces import Box
+    >>> from mod_gym.spaces import Box
     >>> space = Box(low=0, high=1, shape=(3,), dtype=np.float32)
     >>> out = np.zeros((2, 3), dtype=np.float32)
     >>> items = [space.sample() for _ in range(2)]
@@ -45,7 +45,7 @@ def concatenate(items, out, space):
     elif isinstance(space, Space):
         return concatenate_custom(items, out, space)
     else:
-        raise ValueError('Space of type `{0}` is not a valid `mygym.Space` '
+        raise ValueError('Space of type `{0}` is not a valid `mod_gym.Space` '
                          'instance.'.format(type(space)))
 
 def concatenate_base(items, out, space):
@@ -86,7 +86,7 @@ def create_empty_array(space, n=1, fn=np.zeros):
 
     Example
     -------
-    >>> from mygym.spaces import Box, Dict
+    >>> from mod_gym.spaces import Box, Dict
     >>> space = Dict({
     ... 'position': Box(low=0, high=1, shape=(3,), dtype=np.float32),
     ... 'velocity': Box(low=0, high=1, shape=(2,), dtype=np.float32)})
@@ -105,7 +105,7 @@ def create_empty_array(space, n=1, fn=np.zeros):
     elif isinstance(space, Space):
         return create_empty_array_custom(space, n=n, fn=fn)
     else:
-        raise ValueError('Space of type `{0}` is not a valid `mygym.Space` '
+        raise ValueError('Space of type `{0}` is not a valid `mod_gym.Space` '
                          'instance.'.format(type(space)))
 
 def create_empty_array_base(space, n=1, fn=np.zeros):

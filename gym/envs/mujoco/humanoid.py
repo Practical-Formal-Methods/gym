@@ -1,6 +1,6 @@
 import numpy as np
-from mygym.envs.mujoco import mujoco_env
-from mygym import utils
+from mod_gym.envs.mujoco import mujoco_env
+from mod_gym import utils
 
 def mass_center(model, sim):
     mass = np.expand_dims(model.body_mass, 1)

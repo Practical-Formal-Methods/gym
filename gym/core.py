@@ -1,6 +1,6 @@
-import mygym
-from mygym.gym import error
-from mygym.gym.utils import closer
+import mod_gym
+from mod_gym.gym import error
+from mod_gym.gym.utils import closer
 
 env_closer = closer.Closer()
 
@@ -139,7 +139,7 @@ class Env(object):
         """Completely unwrap this env.
 
         Returns:
-            mygym.Env: The base non-wrapped mygym.Env instance
+            mod_gym.Env: The base non-wrapped mod_gym.Env instance
         """
         return self
 
@@ -171,8 +171,8 @@ class GoalEnv(Env):
 
     def reset(self):
         # Enforce that each GoalEnv uses a Goal-compatible observation space.
-        if not isinstance(self.observation_space, mygym.spaces.Dict):
-            raise error.Error('GoalEnv requires an observation space of type mygym.spaces.Dict')
+        if not isinstance(self.observation_space, mod_gym.spaces.Dict):
+            raise error.Error('GoalEnv requires an observation space of type mod_gym.spaces.Dict')
         for key in ['observation', 'achieved_goal', 'desired_goal']:
             if key not in self.observation_space.spaces:
                 raise error.Error('GoalEnv requires the "{}" key to be part of the observation dictionary.'.format(key))

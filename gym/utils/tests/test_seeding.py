@@ -1,5 +1,5 @@
-from mygym import error
-from mygym.utils import seeding
+from mod_gym import error
+from mod_gym.utils import seeding
 
 def test_invalid_seeds():
     for seed in [-1, 'test']:

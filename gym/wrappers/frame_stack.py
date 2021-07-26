@@ -1,8 +1,8 @@
 from collections import deque
 import numpy as np
 
-from mygym.gym.spaces import Box
-from mygym.gym import Wrapper
+from mod_gym.gym.spaces import Box
+from mod_gym.gym import Wrapper
 
 
 class LazyFrames(object):
@@ -74,8 +74,8 @@ class FrameStack(Wrapper):
 
     Example::
 
-        >>> import mygym
-        >>> env = mygym.make('PongNoFrameskip-v0')
+        >>> import mod_gym
+        >>> env = mod_gym.make('PongNoFrameskip-v0')
         >>> env = FrameStack(env, 4)
         >>> env.observation_space
         Box(4, 210, 160, 3)

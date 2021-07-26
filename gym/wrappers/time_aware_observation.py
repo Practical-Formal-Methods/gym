@@ -1,7 +1,7 @@
 import numpy as np
 
-from mygym.gym.spaces import Box
-from mygym.gym import ObservationWrapper
+from mod_gym.gym.spaces import Box
+from mod_gym.gym import ObservationWrapper
 
 
 class TimeAwareObservation(ObservationWrapper):

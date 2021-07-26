@@ -1,4 +1,4 @@
-from mygym.gym import RewardWrapper
+from mod_gym.gym import RewardWrapper
 
 
 class TransformReward(RewardWrapper):
@@ -6,8 +6,8 @@ class TransformReward(RewardWrapper):
 
     Example::
 
-        >>> import mygym
-        >>> env = mygym.make('CartPole-v1')
+        >>> import mod_gym
+        >>> env = mod_gym.make('CartPole-v1')
         >>> env = TransformReward(env, lambda r: 0.01*r)
         >>> env.reset()
         >>> observation, reward, done, info = env.step(env.action_space.sample())

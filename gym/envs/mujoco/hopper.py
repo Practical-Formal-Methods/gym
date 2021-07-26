@@ -1,6 +1,6 @@
 import numpy as np
-from mygym import utils
-from mygym.envs.mujoco import mujoco_env
+from mod_gym import utils
+from mod_gym.envs.mujoco import mujoco_env
 
 class HopperEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self):

@@ -2,8 +2,8 @@ import pytest
 
 import numpy as np
 
-from mygym import gym
-from mygym.gym.wrappers import RescaleAction
+from mod_gym import gym
+from mod_gym.gym.wrappers import RescaleAction
 
 
 def test_rescale_action():
