@@ -127,7 +127,7 @@ class LunarLander(gym.Env, EzPickle):
         self.world.DestroyBody(self.legs[0])
         self.world.DestroyBody(self.legs[1])
 
-    def reset(self):
+    def reset(self, hi_lvl_state=None):
         self._destroy()
         self.world.contactListener_keepref = ContactDetector(self)
         self.world.contactListener = self.world.contactListener_keepref
@@ -169,7 +169,7 @@ class LunarLander(gym.Env, EzPickle):
         self.lander = self.world.CreateDynamicBody(
             position=(VIEWPORT_W/SCALE/2, initial_y),
             angle=0.0,
-            fixtures = fixtureDef(
+            fixtures=fixtureDef(
                 shape=polygonShape(vertices=[(x/SCALE, y/SCALE) for x, y in LANDER_POLY]),
                 density=5.0,
                 friction=0.1,
@@ -187,6 +187,7 @@ class LunarLander(gym.Env, EzPickle):
         self.legs = []
         for i in [-1, +1]:
             leg = self.world.CreateDynamicBody(
+                linearVelocity=(0, -4),
                 position=(VIEWPORT_W/SCALE/2 - i*LEG_AWAY/SCALE, initial_y),
                 angle=(i * 0.05),
                 fixtures=fixtureDef(
@@ -218,9 +219,40 @@ class LunarLander(gym.Env, EzPickle):
             leg.joint = self.world.CreateJoint(rjd)
             self.legs.append(leg)
 
+        if hi_lvl_state is not None:
+            self.set_state(hi_lvl_state)
         self.drawlist = [self.lander] + self.legs
 
         return self.step(np.array([0, 0]) if self.continuous else 0)[0]
+
+    def set_state(self, hi_lvl_state):
+        n_pos_x, n_pos_y, n_vel_x, n_vel_y, n_angle, n_ang_vel, n_contact_l, n_contact_r = hi_lvl_state
+        self.lander.position = (n_pos_x, n_pos_y)
+        self.lander.linearVelocity = (n_vel_x, n_vel_y)
+        self.lander.angle += n_angle
+        self.legs[0].angle += n_angle
+        self.legs[1].angle += n_angle
+        self.lander.angularVelocity = n_ang_vel
+        self.legs[0].ground_contact = n_contact_l
+        self.legs[1].ground_contact = n_contact_r
+
+    def get_state(self):
+        pos = self.lander.position
+        vel = self.lander.linearVelocity
+        nn_state = [
+            (pos.x - VIEWPORT_W/SCALE/2) / (VIEWPORT_W/SCALE/2),
+            (pos.y - (self.helipad_y+LEG_DOWN/SCALE)) / (VIEWPORT_H/SCALE/2),
+            vel.x*(VIEWPORT_W/SCALE/2)/FPS,
+            vel.y*(VIEWPORT_H/SCALE/2)/FPS,
+            self.lander.angle,
+            20.0*self.lander.angularVelocity/FPS,
+            1.0 if self.legs[0].ground_contact else 0.0,
+            1.0 if self.legs[1].ground_contact else 0.0
+        ]
+
+        hi_lvl_state = [pos.x, pos.y, vel.x, vel.y, self.lander.angle, self.lander.angularVelocity,
+                        self.legs[0].ground_contact, self.legs[1].ground_contact]
+        return nn_state, hi_lvl_state
 
     def _create_particle(self, mass, x, y, ttl):
         p = self.world.CreateDynamicBody(
@@ -335,7 +367,11 @@ class LunarLander(gym.Env, EzPickle):
         if not self.lander.awake:
             done = True
             reward = +100
-        return np.array(state, dtype=np.float32), reward, done, {}
+
+        info = {"pos": (pos.x, pos.y), "vel": (vel.x, vel.y), "angle": self.lander.angle,
+                "angle_vel": self.lander.angularVelocity,
+                "leg_contact": (self.legs[0].ground_contact, self.legs[1].ground_contact)}
+        return np.array(state, dtype=np.float32), reward, done, info
 
     def render(self, mode='human'):
         from mod_gym.gym.envs.classic_control import rendering
