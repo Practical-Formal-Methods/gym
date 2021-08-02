@@ -59,6 +59,11 @@ SIDE_ENGINE_AWAY = 12.0
 VIEWPORT_W = 600
 VIEWPORT_H = 400
 
+W = VIEWPORT_W/SCALE
+H = VIEWPORT_H/SCALE
+
+# terrain
+CHUNKS = 11
 
 class ContactDetector(contactListener):
     def __init__(self, env):
@@ -134,30 +139,83 @@ class LunarLander(gym.Env, EzPickle):
         self.game_over = False
         self.prev_shaping = None
 
-        W = VIEWPORT_W/SCALE
-        H = VIEWPORT_H/SCALE
+        initial_y = VIEWPORT_H/SCALE
 
-        # terrain
-        CHUNKS = 11
-        height = self.np_random.uniform(0, H/2, size=(CHUNKS+1,))
-        chunk_x = [W/(CHUNKS-1)*i for i in range(CHUNKS)]
-        self.helipad_x1 = chunk_x[CHUNKS//2-1]
-        self.helipad_x2 = chunk_x[CHUNKS//2+1]
-        self.helipad_y = H/4
-        height[CHUNKS//2-2] = self.helipad_y
-        height[CHUNKS//2-1] = self.helipad_y
-        height[CHUNKS//2+0] = self.helipad_y
-        height[CHUNKS//2+1] = self.helipad_y
-        height[CHUNKS//2+2] = self.helipad_y
-        smooth_y = [0.33*(height[i-1] + height[i+0] + height[i+1]) for i in range(CHUNKS)]
+        if hi_lvl_state is not None:
+            lander_pos, lander_vel, lander_angle, lander_ang_vel, lleg_contact, rleg_contact, lleg_pos, rleg_pos, moon_p1s, moon_p2s = hi_lvl_state
+            self.moon_p1s, self.moon_p2s = moon_p1s, moon_p2s
+        else:
+            height = self.np_random.uniform(0, H/2, size=(CHUNKS+1,))
+            chunk_x = [W/(CHUNKS-1)*i for i in range(CHUNKS)]
+            self.helipad_x1 = chunk_x[CHUNKS//2-1]
+            self.helipad_x2 = chunk_x[CHUNKS//2+1]
+            self.helipad_y = H/4
+            height[CHUNKS//2-2] = self.helipad_y
+            height[CHUNKS//2-1] = self.helipad_y
+            height[CHUNKS//2+0] = self.helipad_y
+            height[CHUNKS//2+1] = self.helipad_y
+            height[CHUNKS//2+2] = self.helipad_y
+            smooth_y = [0.33*(height[i-1] + height[i+0] + height[i+1]) for i in range(CHUNKS)]
 
+            p1s, p2s = [], []
+            for i in range(CHUNKS-1):
+                p1 = (chunk_x[i], smooth_y[i])
+                p2 = (chunk_x[i+1], smooth_y[i+1])
+                p1s.append(p1)
+                p2s.append(p2)
+
+            self.moon_p1s, self.moon_p2s = p1s, p2s
+
+            lander_pos = (VIEWPORT_W/SCALE/2, initial_y)
+            lander_angle = 0.0
+            lander_vel = None
+            lander_ang_vel = None
+
+            lleg_contact, rleg_contact = False, False
+            lleg_pos = (VIEWPORT_W/SCALE/2 - -1*LEG_AWAY/SCALE, initial_y)
+            rleg_pos = (VIEWPORT_W/SCALE/2 - +1*LEG_AWAY/SCALE, initial_y)
+
+        ## Create Moon ##
+        self.create_moon()
+
+        ## Create Lander ##
+        self.lander = self.create_lander(lander_pos, lander_angle, lander_vel, lander_ang_vel)
+        self.lander.color1 = (0.5, 0.4, 0.9)
+        self.lander.color2 = (0.3, 0.3, 0.5)
+
+        if hi_lvl_state is None:
+            self.lander.ApplyForceToCenter( (
+                self.np_random.uniform(-INITIAL_RANDOM, INITIAL_RANDOM),
+                self.np_random.uniform(-INITIAL_RANDOM, INITIAL_RANDOM)
+                ), True)
+
+        ## Create Legs ##
+        leg_linVel = (0, -4)
+        lleg_angle = (-1 * 0.05) + lander_angle  # TODO WATCHOUT HERE
+        rleg_angle = (+1 * 0.05) + lander_angle  # TODO WATCHOUT HERE
+        self.legs = []
+        lleg = self.create_leg(-1, leg_linVel, lleg_pos, lleg_angle, lleg_contact)
+        rleg = self.create_leg(+1, leg_linVel, rleg_pos, rleg_angle, rleg_contact)
+        self.legs.append(lleg)
+        self.legs.append(rleg)
+
+        self.drawlist = [self.lander] + self.legs
+
+        observation, _ = self.get_state()
+        if hi_lvl_state is None:
+            return self.step(np.array([0, 0]) if self.continuous else 0)[0]
+        else:
+            return observation, 0, False, {}
+
+
+    def create_moon(self):
         self.moon = self.world.CreateStaticBody(shapes=edgeShape(vertices=[(0, 0), (W, 0)]))
         self.sky_polys = []
         for i in range(CHUNKS-1):
-            p1 = (chunk_x[i], smooth_y[i])
-            p2 = (chunk_x[i+1], smooth_y[i+1])
+            p1 = self.moon_p1s[i]
+            p2 = self.moon_p2s[i]
             self.moon.CreateEdgeFixture(
-                vertices=[p1,p2],
+                vertices=[p1, p2],
                 density=0,
                 friction=0.1)
             self.sky_polys.append([p1, p2, (p2[0], H), (p1[0], H)])
@@ -165,10 +223,11 @@ class LunarLander(gym.Env, EzPickle):
         self.moon.color1 = (0.0, 0.0, 0.0)
         self.moon.color2 = (0.0, 0.0, 0.0)
 
-        initial_y = VIEWPORT_H/SCALE
-        self.lander = self.world.CreateDynamicBody(
-            position=(VIEWPORT_W/SCALE/2, initial_y),
-            angle=0.0,
+
+    def create_lander(self, pos, angle, linVel=None, angVel=None):
+        lander = self.world.CreateDynamicBody(
+            position=pos,
+            angle=angle,
             fixtures=fixtureDef(
                 shape=polygonShape(vertices=[(x/SCALE, y/SCALE) for x, y in LANDER_POLY]),
                 density=5.0,
@@ -176,82 +235,97 @@ class LunarLander(gym.Env, EzPickle):
                 categoryBits=0x0010,
                 maskBits=0x001,   # collide only with ground
                 restitution=0.0)  # 0.99 bouncy
-                )
-        self.lander.color1 = (0.5, 0.4, 0.9)
-        self.lander.color2 = (0.3, 0.3, 0.5)
-        self.lander.ApplyForceToCenter( (
-            self.np_random.uniform(-INITIAL_RANDOM, INITIAL_RANDOM),
-            self.np_random.uniform(-INITIAL_RANDOM, INITIAL_RANDOM)
-            ), True)
+        )
 
-        self.legs = []
-        for i in [-1, +1]:
-            leg = self.world.CreateDynamicBody(
-                linearVelocity=(0, -4),
-                position=(VIEWPORT_W/SCALE/2 - i*LEG_AWAY/SCALE, initial_y),
-                angle=(i * 0.05),
-                fixtures=fixtureDef(
-                    shape=polygonShape(box=(LEG_W/SCALE, LEG_H/SCALE)),
-                    density=1.0,
-                    restitution=0.0,
-                    categoryBits=0x0020,
-                    maskBits=0x001)
-                )
-            leg.ground_contact = False
-            leg.color1 = (0.5, 0.4, 0.9)
-            leg.color2 = (0.3, 0.3, 0.5)
-            rjd = revoluteJointDef(
-                bodyA=self.lander,
-                bodyB=leg,
-                localAnchorA=(0, 0),
-                localAnchorB=(i * LEG_AWAY/SCALE, LEG_DOWN/SCALE),
-                enableMotor=True,
-                enableLimit=True,
-                maxMotorTorque=LEG_SPRING_TORQUE,
-                motorSpeed=+0.3 * i  # low enough not to jump back into the sky
-                )
-            if i == -1:
-                rjd.lowerAngle = +0.9 - 0.5  # The most esoteric numbers here, angled legs have freedom to travel within
-                rjd.upperAngle = +0.9
-            else:
-                rjd.lowerAngle = -0.9
-                rjd.upperAngle = -0.9 + 0.5
-            leg.joint = self.world.CreateJoint(rjd)
-            self.legs.append(leg)
+        if linVel is not None:
+            lander.linearVelocity = linVel
+        if angVel is not None:
+            lander.angularVelocity = angVel
 
-        if hi_lvl_state is not None:
-            self.set_state(hi_lvl_state)
-        self.drawlist = [self.lander] + self.legs
+        return lander
 
-        return self.step(np.array([0, 0]) if self.continuous else 0)[0]
+
+    def create_leg(self, i, linVel, pos, angle, contact, angVel=None, linDamp=None, angDamp=None):
+        leg = self.world.CreateDynamicBody(
+            position=pos,
+            angle=angle,
+            fixtures=fixtureDef(
+                shape=polygonShape(box=(LEG_W/SCALE, LEG_H/SCALE)),
+                density=1.0,
+                restitution=0.0,
+                categoryBits=0x0020,
+                maskBits=0x001)
+        )
+        leg.linearVelocity = linVel
+
+        if angVel is not None:
+            leg.angularVelocity = angVel
+        if linDamp is not None:
+            leg.linearDamping = linDamp
+        if angDamp is not None:
+            leg.angularDamping = angDamp
+
+        leg.ground_contact = contact
+        leg.color1 = (0.5, 0.4, 0.9)
+        leg.color2 = (0.3, 0.3, 0.5)
+        rjd = revoluteJointDef(
+            bodyA=self.lander,
+            bodyB=leg,
+            localAnchorA=(0, 0),
+            localAnchorB=(i * LEG_AWAY/SCALE, LEG_DOWN/SCALE),
+            enableMotor=True,
+            enableLimit=True,
+            maxMotorTorque=LEG_SPRING_TORQUE,
+            motorSpeed=+0.3 * i  # low enough not to jump back into the sky
+        )
+        if i == -1:
+            rjd.lowerAngle = +0.9 - 0.5  # The most esoteric numbers here, angled legs have freedom to travel within
+            rjd.upperAngle = +0.9
+        else:
+            rjd.lowerAngle = -0.9
+            rjd.upperAngle = -0.9 + 0.5
+        leg.joint = self.world.CreateJoint(rjd)
+        return leg
 
     def set_state(self, hi_lvl_state):
-        n_pos_x, n_pos_y, n_vel_x, n_vel_y, n_angle, n_ang_vel, n_contact_l, n_contact_r = hi_lvl_state
-        self.lander.position = (n_pos_x, n_pos_y)
-        self.lander.linearVelocity = (n_vel_x, n_vel_y)
-        self.lander.angle += n_angle
-        self.legs[0].angle += n_angle
-        self.legs[1].angle += n_angle
-        self.lander.angularVelocity = n_ang_vel
-        self.legs[0].ground_contact = n_contact_l
-        self.legs[1].ground_contact = n_contact_r
+        lander_pos, lander_vel, n_angle, n_ang_vel, \
+        n_contact_l, n_contact_r, lleg_pos, rleg_pos = hi_lvl_state
+
+        self.world.DestroyBody(self.lander)
+        self.lander = None
+        self.lander = self.create_lander((lander_pos.x, lander_pos.y), n_angle, linVel=(lander_vel.x, lander_vel.y), angVel=n_ang_vel)
+
+        self.world.DestroyBody(self.legs[0])
+        self.world.DestroyBody(self.legs[1])
+        lleg_vel = (0, -4)
+        rleg_vel = (0, -4)
+        lleg_ang = (-1 * 0.05) + n_angle
+        rleg_ang = (+1 * 0.05) + n_angle
+        lleg = self.create_leg(-1, lleg_vel, lleg_pos, lleg_ang, n_contact_l)
+        rleg = self.create_leg(+1, rleg_vel, rleg_pos, rleg_ang, n_contact_r)
+        self.legs[0] = lleg
+        self.legs[1] = rleg
 
     def get_state(self):
-        pos = self.lander.position
-        vel = self.lander.linearVelocity
+        lander_pos = self.lander.position
+        lander_vel = self.lander.linearVelocity
         nn_state = [
-            (pos.x - VIEWPORT_W/SCALE/2) / (VIEWPORT_W/SCALE/2),
-            (pos.y - (self.helipad_y+LEG_DOWN/SCALE)) / (VIEWPORT_H/SCALE/2),
-            vel.x*(VIEWPORT_W/SCALE/2)/FPS,
-            vel.y*(VIEWPORT_H/SCALE/2)/FPS,
+            (lander_pos.x - VIEWPORT_W/SCALE/2) / (VIEWPORT_W/SCALE/2),
+            (lander_pos.y - (self.helipad_y+LEG_DOWN/SCALE)) / (VIEWPORT_H/SCALE/2),
+            lander_vel.x*(VIEWPORT_W/SCALE/2)/FPS,
+            lander_vel.y*(VIEWPORT_H/SCALE/2)/FPS,
             self.lander.angle,
             20.0*self.lander.angularVelocity/FPS,
             1.0 if self.legs[0].ground_contact else 0.0,
             1.0 if self.legs[1].ground_contact else 0.0
         ]
+        hi_lvl_state = [(lander_pos.x, lander_pos.y), (lander_vel.x, lander_vel.y),
+                        self.lander.angle, self.lander.angularVelocity,
+                        self.legs[0].ground_contact, self.legs[1].ground_contact,
+                        (self.legs[0].position.x, self.legs[0].position.y),
+                        (self.legs[1].position.x, self.legs[1].position.y),
+                        self.moon_p1s, self.moon_p2s]
 
-        hi_lvl_state = [pos.x, pos.y, vel.x, vel.y, self.lander.angle, self.lander.angularVelocity,
-                        self.legs[0].ground_contact, self.legs[1].ground_contact]
         return nn_state, hi_lvl_state
 
     def _create_particle(self, mass, x, y, ttl):
