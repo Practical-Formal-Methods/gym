@@ -140,31 +140,22 @@ class LunarLander(gym.Env, EzPickle):
         self.prev_shaping = None
 
         initial_y = VIEWPORT_H/SCALE
+        chunk_x = [W/(CHUNKS-1)*i for i in range(CHUNKS)]
 
         if hi_lvl_state is not None:
-            lander_pos, lander_vel, lander_angle, lander_ang_vel, lleg_contact, rleg_contact, lleg_pos, rleg_pos, moon_p1s, moon_p2s = hi_lvl_state
-            self.moon_p1s, self.moon_p2s = moon_p1s, moon_p2s
+            lander_pos, lander_vel, lander_angle, lander_ang_vel, lleg_contact, rleg_contact, lleg_pos, rleg_pos, height = hi_lvl_state
+            self.height = height
+            # self.moon_p1s, self.moon_p2s = moon_p1s, moon_p2s
         else:
-            height = self.np_random.uniform(0, H/2, size=(CHUNKS+1,))
-            chunk_x = [W/(CHUNKS-1)*i for i in range(CHUNKS)]
+            self.height = self.np_random.uniform(0, H/2, size=(CHUNKS+1,))
             self.helipad_x1 = chunk_x[CHUNKS//2-1]
             self.helipad_x2 = chunk_x[CHUNKS//2+1]
             self.helipad_y = H/4
-            height[CHUNKS//2-2] = self.helipad_y
-            height[CHUNKS//2-1] = self.helipad_y
-            height[CHUNKS//2+0] = self.helipad_y
-            height[CHUNKS//2+1] = self.helipad_y
-            height[CHUNKS//2+2] = self.helipad_y
-            smooth_y = [0.33*(height[i-1] + height[i+0] + height[i+1]) for i in range(CHUNKS)]
-
-            p1s, p2s = [], []
-            for i in range(CHUNKS-1):
-                p1 = (chunk_x[i], smooth_y[i])
-                p2 = (chunk_x[i+1], smooth_y[i+1])
-                p1s.append(p1)
-                p2s.append(p2)
-
-            self.moon_p1s, self.moon_p2s = p1s, p2s
+            self.height[CHUNKS//2-2] = self.helipad_y
+            self.height[CHUNKS//2-1] = self.helipad_y
+            self.height[CHUNKS//2+0] = self.helipad_y
+            self.height[CHUNKS//2+1] = self.helipad_y
+            self.height[CHUNKS//2+2] = self.helipad_y
 
             lander_pos = (VIEWPORT_W/SCALE/2, initial_y)
             lander_angle = 0.0
@@ -175,8 +166,17 @@ class LunarLander(gym.Env, EzPickle):
             lleg_pos = (VIEWPORT_W/SCALE/2 - -1*LEG_AWAY/SCALE, initial_y)
             rleg_pos = (VIEWPORT_W/SCALE/2 - +1*LEG_AWAY/SCALE, initial_y)
 
+        smooth_y = [0.33*(self.height[i-1] + self.height[i+0] + self.height[i+1]) for i in range(CHUNKS)]
+
+        p1s, p2s = [], []
+        for i in range(CHUNKS-1):
+            p1 = (chunk_x[i], smooth_y[i])
+            p2 = (chunk_x[i+1], smooth_y[i+1])
+            p1s.append(p1)
+            p2s.append(p2)
+
         ## Create Moon ##
-        self.create_moon()
+        self.create_moon(p1s, p2s)
 
         ## Create Lander ##
         self.lander = self.create_lander(lander_pos, lander_angle, lander_vel, lander_ang_vel)
@@ -208,12 +208,12 @@ class LunarLander(gym.Env, EzPickle):
             return observation, 0, False, {}
 
 
-    def create_moon(self):
+    def create_moon(self, p1s, p2s):
         self.moon = self.world.CreateStaticBody(shapes=edgeShape(vertices=[(0, 0), (W, 0)]))
         self.sky_polys = []
         for i in range(CHUNKS-1):
-            p1 = self.moon_p1s[i]
-            p2 = self.moon_p2s[i]
+            p1 = p1s[i]
+            p2 = p2s[i]
             self.moon.CreateEdgeFixture(
                 vertices=[p1, p2],
                 density=0,
@@ -324,7 +324,7 @@ class LunarLander(gym.Env, EzPickle):
                         self.legs[0].ground_contact, self.legs[1].ground_contact,
                         (self.legs[0].position.x, self.legs[0].position.y),
                         (self.legs[1].position.x, self.legs[1].position.y),
-                        self.moon_p1s, self.moon_p2s]
+                        self.height]
 
         return nn_state, hi_lvl_state
 
