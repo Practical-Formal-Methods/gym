@@ -143,9 +143,11 @@ class LunarLander(gym.Env, EzPickle):
         chunk_x = [W/(CHUNKS-1)*i for i in range(CHUNKS)]
 
         if hi_lvl_state is not None:
-            lander_pos, lander_vel, lander_angle, lander_ang_vel, lleg_contact, rleg_contact, lleg_pos, rleg_pos, height = hi_lvl_state
+            lander_pos, lander_vel, lander_angle, lander_ang_vel, \
+                lleg_contact, rleg_contact, lleg_angle, rleg_angle, \
+                lleg_pos, rleg_pos, height = hi_lvl_state
             self.height = height
-            # self.moon_p1s, self.moon_p2s = moon_p1s, moon_p2s
+            self.helipad_y = height[CHUNKS//2+0]
         else:
             self.height = self.np_random.uniform(0, H/2, size=(CHUNKS+1,))
             self.helipad_x1 = chunk_x[CHUNKS//2-1]
@@ -162,6 +164,8 @@ class LunarLander(gym.Env, EzPickle):
             lander_vel = None
             lander_ang_vel = None
 
+            lleg_angle = (-1 * 0.05)
+            rleg_angle = (+1 * 0.05)
             lleg_contact, rleg_contact = False, False
             lleg_pos = (VIEWPORT_W/SCALE/2 - -1*LEG_AWAY/SCALE, initial_y)
             rleg_pos = (VIEWPORT_W/SCALE/2 - +1*LEG_AWAY/SCALE, initial_y)
@@ -191,8 +195,6 @@ class LunarLander(gym.Env, EzPickle):
 
         ## Create Legs ##
         leg_linVel = (0, -4)
-        lleg_angle = (-1 * 0.05) + lander_angle  # TODO WATCHOUT HERE
-        rleg_angle = (+1 * 0.05) + lander_angle  # TODO WATCHOUT HERE
         self.legs = []
         lleg = self.create_leg(-1, leg_linVel, lleg_pos, lleg_angle, lleg_contact)
         rleg = self.create_leg(+1, leg_linVel, rleg_pos, rleg_angle, rleg_contact)
@@ -201,11 +203,11 @@ class LunarLander(gym.Env, EzPickle):
 
         self.drawlist = [self.lander] + self.legs
 
-        observation, _ = self.get_state()
         if hi_lvl_state is None:
             return self.step(np.array([0, 0]) if self.continuous else 0)[0]
         else:
-            return observation, 0, False, {}
+            observation, _ = self.get_state()
+            return observation
 
 
     def create_moon(self, p1s, p2s):
@@ -276,7 +278,8 @@ class LunarLander(gym.Env, EzPickle):
             enableMotor=True,
             enableLimit=True,
             maxMotorTorque=LEG_SPRING_TORQUE,
-            motorSpeed=+0.3 * i  # low enough not to jump back into the sky
+            motorSpeed=+0.3 * i,  # low enough not to jump back into the sky
+            referenceAngle=i*0.05
         )
         if i == -1:
             rjd.lowerAngle = +0.9 - 0.5  # The most esoteric numbers here, angled legs have freedom to travel within
@@ -322,6 +325,7 @@ class LunarLander(gym.Env, EzPickle):
         hi_lvl_state = [(lander_pos.x, lander_pos.y), (lander_vel.x, lander_vel.y),
                         self.lander.angle, self.lander.angularVelocity,
                         self.legs[0].ground_contact, self.legs[1].ground_contact,
+                        self.legs[0].angle, self.legs[1].angle,
                         (self.legs[0].position.x, self.legs[0].position.y),
                         (self.legs[1].position.x, self.legs[1].position.y),
                         self.height]
