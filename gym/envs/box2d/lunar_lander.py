@@ -145,6 +145,7 @@ class LunarLander(gym.Env, EzPickle):
         if hi_lvl_state is not None:
             lander_pos, lander_vel, lander_angle, lander_ang_vel, \
                 lleg_contact, rleg_contact, lleg_angle, rleg_angle, \
+                lleg_angvel, rleg_angvel, lleg_lvel, rleg_lvel, \
                 lleg_pos, rleg_pos, height = hi_lvl_state
             self.height = height
             self.helipad_y = height[CHUNKS//2+0]
@@ -161,12 +162,12 @@ class LunarLander(gym.Env, EzPickle):
 
             lander_pos = (VIEWPORT_W/SCALE/2, initial_y)
             lander_angle = 0.0
-            lander_vel = None
-            lander_ang_vel = None
+            lander_vel, lander_ang_vel = None, None
 
             lleg_angle = (-1 * 0.05)
             rleg_angle = (+1 * 0.05)
             lleg_contact, rleg_contact = False, False
+            lleg_angvel, rleg_angvel, lleg_lvel, rleg_lvel = None, None, None, None
             lleg_pos = (VIEWPORT_W/SCALE/2 - -1*LEG_AWAY/SCALE, initial_y)
             rleg_pos = (VIEWPORT_W/SCALE/2 - +1*LEG_AWAY/SCALE, initial_y)
 
@@ -194,10 +195,10 @@ class LunarLander(gym.Env, EzPickle):
                 ), True)
 
         ## Create Legs ##
-        leg_linVel = (0, -4)
+        # leg_linVel = (0, -4)
         self.legs = []
-        lleg = self.create_leg(-1, leg_linVel, lleg_pos, lleg_angle, lleg_contact)
-        rleg = self.create_leg(+1, leg_linVel, rleg_pos, rleg_angle, rleg_contact)
+        lleg = self.create_leg(-1, lleg_lvel, lleg_angvel, lleg_pos, lleg_angle, lleg_contact)
+        rleg = self.create_leg(+1, rleg_lvel, rleg_angvel, rleg_pos, rleg_angle, rleg_contact)
         self.legs.append(lleg)
         self.legs.append(rleg)
 
@@ -247,7 +248,7 @@ class LunarLander(gym.Env, EzPickle):
         return lander
 
 
-    def create_leg(self, i, linVel, pos, angle, contact, angVel=None, linDamp=None, angDamp=None):
+    def create_leg(self, i, linVel, angVel,  pos, angle, contact):
         leg = self.world.CreateDynamicBody(
             position=pos,
             angle=angle,
@@ -258,14 +259,8 @@ class LunarLander(gym.Env, EzPickle):
                 categoryBits=0x0020,
                 maskBits=0x001)
         )
-        leg.linearVelocity = linVel
-
-        if angVel is not None:
-            leg.angularVelocity = angVel
-        if linDamp is not None:
-            leg.linearDamping = linDamp
-        if angDamp is not None:
-            leg.angularDamping = angDamp
+        if linVel is not None: leg.linearVelocity = linVel
+        if angVel is not None: leg.angularVelocity = angVel
 
         leg.ground_contact = contact
         leg.color1 = (0.5, 0.4, 0.9)
@@ -326,6 +321,9 @@ class LunarLander(gym.Env, EzPickle):
                         self.lander.angle, self.lander.angularVelocity,
                         self.legs[0].ground_contact, self.legs[1].ground_contact,
                         self.legs[0].angle, self.legs[1].angle,
+                        self.legs[0].angularVelocity, self.legs[1].angularVelocity,
+                        (self.legs[0].linearVelocity.x, self.legs[0].linearVelocity.y),
+                        (self.legs[1].linearVelocity.x, self.legs[1].linearVelocity.y),
                         (self.legs[0].position.x, self.legs[0].position.y),
                         (self.legs[1].position.x, self.legs[1].position.y),
                         self.height]

@@ -348,7 +348,7 @@ class BipedalWalker(gym.Env, EzPickle):
         self.hull.color1 = (0.5, 0.4, 0.9)
         self.hull.color2 = (0.3, 0.3, 0.5)
 
-    def create_legs(self, i, leg_positions, leg_angles, leg_contacts, joint_motor_speeds, joint_max_motor_torques):
+    def create_legs(self, i, leg_positions, leg_vels, leg_angles, leg_ang_vels, leg_contacts, joint_motor_speeds, joint_max_motor_torques):
         pos = leg_positions[i+1]
         pos_x, pos_y = pos
         leg = self.world.CreateDynamicBody(
@@ -356,6 +356,8 @@ class BipedalWalker(gym.Env, EzPickle):
             angle=(leg_angles[i+1]),  # (i*0.05 + self.hull.angle),
             fixtures=LEG_FD
         )
+        if leg_vels is not None: leg.linearVelocity = leg_vels[i+1]
+        if leg_ang_vels is not None: leg.angularVelocity = leg_ang_vels[i+1]
         leg.color1 = (0.6-i/10., 0.3-i/10., 0.5-i/10.)
         leg.color2 = (0.4-i/10., 0.2-i/10., 0.3-i/10.)
         m_speed = joint_motor_speeds[i+1]
@@ -383,6 +385,8 @@ class BipedalWalker(gym.Env, EzPickle):
             angle=(leg_angles[i+2]),  # (i*0.05 + leg.angle),
             fixtures=LOWER_FD
         )
+        if leg_ang_vels is not None: lower.angularVelocity = leg_ang_vels[i+2]
+        if leg_vels is not None: lower.linearVelocity = leg_vels[i+2]
         lower.color1 = (0.6-i/10., 0.3-i/10., 0.5-i/10.)
         lower.color2 = (0.4-i/10., 0.2-i/10., 0.3-i/10.)
         m_speed = joint_motor_speeds[i+2]
@@ -420,13 +424,13 @@ class BipedalWalker(gym.Env, EzPickle):
         self._generate_clouds()
 
         if hi_lvl_state is not None:
-             inrt, hull_pos, hull_vel, hull_ang, hull_angVel, \
+             hull_pos, hull_vel, hull_ang, hull_angVel, \
                 leg_positions, leg_angles, leg_contacts, \
-                joint_motor_speeds, joint_max_motor_torques,\
+                joint_motor_speeds, joint_max_motor_torques, \
+                leg_ang_vels, leg_vels, \
                 terrain_x, terrain_y, terrain_type_poly, \
                 lidar_p1s, lidar_p2s, lidar_frctn = hi_lvl_state
              self.scroll = hull_pos[0] - VIEWPORT_W/SCALE/5
-             self.world.Step(1.0/FPS, 6*30, 2*30)
         else:
             init_x = TERRAIN_STEP*TERRAIN_STARTPAD/2
             init_y = TERRAIN_HEIGHT+2*LEG_H
@@ -439,6 +443,7 @@ class BipedalWalker(gym.Env, EzPickle):
             terrain_x, terrain_y, terrain_type_poly = None, None, None
             lidar_p1s, lidar_p2s, lidar_frctn = None, None, None
             leg_angles = [-0.05, -0.05, 0.05, 0.05]
+            leg_ang_vels, leg_vels = None, None
 
         self._generate_terrain(self.hardcore, terrain_x, terrain_y, terrain_type_poly)
         self.create_hull(hull_pos, angle=hull_ang, linVel=hull_vel, angVel=hull_angVel)
@@ -447,8 +452,8 @@ class BipedalWalker(gym.Env, EzPickle):
 
         self.legs = []
         self.joints = []
-        self.create_legs(-1, leg_positions, leg_angles, leg_contacts, joint_motor_speeds, joint_max_motor_torques)
-        self.create_legs(+1, leg_positions, leg_angles, leg_contacts, joint_motor_speeds, joint_max_motor_torques)
+        self.create_legs(-1, leg_positions, leg_vels, leg_angles, leg_ang_vels, leg_contacts, joint_motor_speeds, joint_max_motor_torques)
+        self.create_legs(+1, leg_positions, leg_vels, leg_angles, leg_ang_vels, leg_contacts, joint_motor_speeds, joint_max_motor_torques)
 
         self.drawlist = self.terrain + self.legs + [self.hull]
 
@@ -501,11 +506,11 @@ class BipedalWalker(gym.Env, EzPickle):
         hull_ang_vel = self.hull.angularVelocity
         leg_positions = [(leg.position.x, leg.position.y) for leg in self.legs]
         leg_contacts = [leg.ground_contact for leg in self.legs]
-        joint_speeds = [jnt.speed for jnt in self.joints]
         joint_motor_speeds = [jnt.motorSpeed for jnt in self.joints]
         joint_max_motor_torques = [jnt.GetMaxMotorTorque() for jnt in self.joints]
-        # joing_ref_angs = [jnt.GetReferenceAngle() for jnt in self.joints]
         leg_angles = [lg.angle for lg in self.legs]
+        leg_vels = [(leg.linearVelocity.x, leg.linearVelocity.y) for leg in self.legs]
+        leg_ang_vels = [leg.angularVelocity for leg in self.legs]
 
         terrain_x = self.terrain_x
         terrain_y = self.terrain_y
@@ -516,9 +521,9 @@ class BipedalWalker(gym.Env, EzPickle):
             lidar_p2s.append(ldr.p2)
             lidar_frctn.append(ldr.fraction)
 
-        hi_lvl_state = [joint_speeds, (hull_pos.x, hull_pos.y), (hull_vel.x, hull_vel.y), hull_angle, hull_ang_vel,
+        hi_lvl_state = [(hull_pos.x, hull_pos.y), (hull_vel.x, hull_vel.y), hull_angle, hull_ang_vel,
                         leg_positions, leg_angles, leg_contacts, joint_motor_speeds, joint_max_motor_torques,
-                        terrain_x, terrain_y, terrain_type_poly, lidar_p1s, lidar_p2s, lidar_frctn]
+                        leg_ang_vels, leg_vels, terrain_x, terrain_y, terrain_type_poly, lidar_p1s, lidar_p2s, lidar_frctn]
 
         return nn_state, hi_lvl_state
 
