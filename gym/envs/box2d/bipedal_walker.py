@@ -527,6 +527,7 @@ class BipedalWalker(gym.Env, EzPickle):
 
         return nn_state, hi_lvl_state
 
+    # @profile
     def step(self, action):
         #self.hull.ApplyForceToCenter((0, 20), True) -- Uncomment this to receive a bit of stability help
         control_speed = False  # Should be easier as well
@@ -537,13 +538,13 @@ class BipedalWalker(gym.Env, EzPickle):
             self.joints[3].motorSpeed = float(SPEED_KNEE * np.clip(action[3], -1, 1))
         else:
             self.joints[0].motorSpeed     = float(SPEED_HIP     * np.sign(action[0]))
-            self.joints[0].maxMotorTorque = float(MOTORS_TORQUE * np.clip(np.abs(action[0]), 0, 1))
+            self.joints[0].maxMotorTorque = float(MOTORS_TORQUE * np.core.umath.minimum(np.abs(action[0]), 1))  # np.clip(, 0, 1))
             self.joints[1].motorSpeed     = float(SPEED_KNEE    * np.sign(action[1]))
-            self.joints[1].maxMotorTorque = float(MOTORS_TORQUE * np.clip(np.abs(action[1]), 0, 1))
+            self.joints[1].maxMotorTorque = float(MOTORS_TORQUE * np.core.umath.minimum(np.abs(action[1]), 1))  # np.clip(np.abs(action[1]), 0, 1))
             self.joints[2].motorSpeed     = float(SPEED_HIP     * np.sign(action[2]))
-            self.joints[2].maxMotorTorque = float(MOTORS_TORQUE * np.clip(np.abs(action[2]), 0, 1))
+            self.joints[2].maxMotorTorque = float(MOTORS_TORQUE * np.core.umath.minimum(np.abs(action[2]), 1))  # np.clip(np.abs(action[2]), 0, 1))
             self.joints[3].motorSpeed     = float(SPEED_KNEE    * np.sign(action[3]))
-            self.joints[3].maxMotorTorque = float(MOTORS_TORQUE * np.clip(np.abs(action[3]), 0, 1))
+            self.joints[3].maxMotorTorque = float(MOTORS_TORQUE * np.core.umath.minimum(np.abs(action[3]), 1))  # np.clip(np.abs(action[3]), 0, 1))
 
         self.world.Step(1.0/FPS, 6*30, 2*30)
 
@@ -588,7 +589,7 @@ class BipedalWalker(gym.Env, EzPickle):
         self.prev_shaping = shaping
 
         for a in action:
-            reward -= 0.00035 * MOTORS_TORQUE * np.clip(np.abs(a), 0, 1)
+            reward -= 0.00035 * MOTORS_TORQUE * np.core.umath.minimum(np.abs(a), 1)  # np.core.umath.minimum(np.abs(a), 1), 0)  # np.clip(np.abs(a), 0, 1)
             # normalized to about -50.0 using heuristic, more optimal agent should spend less
 
         done = False
@@ -599,6 +600,17 @@ class BipedalWalker(gym.Env, EzPickle):
             done   = True
 
         return np.array(state), reward, done, {}
+
+    def my_clip(self, val):
+        return 1 if val > 1 else val
+
+    def get_sign(self, val):
+        if val < 0:
+            return -1
+        elif val > 0:
+            return 1
+        else:
+            return 0
 
     def render(self, mode='human'):
         from mod_gym.gym.envs.classic_control import rendering
