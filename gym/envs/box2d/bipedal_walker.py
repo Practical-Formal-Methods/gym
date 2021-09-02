@@ -428,8 +428,8 @@ class BipedalWalker(gym.Env, EzPickle):
                 leg_positions, leg_angles, leg_contacts, \
                 joint_motor_speeds, joint_max_motor_torques, \
                 leg_ang_vels, leg_vels, \
-                terrain_x, terrain_y, terrain_type_poly, \
-                lidar_p1s, lidar_p2s, lidar_frctn = hi_lvl_state
+                terrain_x, terrain_y, terrain_type_poly = hi_lvl_state
+                # lidar_p1s, lidar_p2s, lidar_frctn = hi_lvl_state
              self.scroll = hull_pos[0] - VIEWPORT_W/SCALE/5
         else:
             init_x = TERRAIN_STEP*TERRAIN_STARTPAD/2
@@ -441,10 +441,10 @@ class BipedalWalker(gym.Env, EzPickle):
             hull_pos = (init_x, init_y)
             hull_ang, hull_vel, hull_angVel = None, None, None
             terrain_x, terrain_y, terrain_type_poly = None, None, None
-            lidar_p1s, lidar_p2s, lidar_frctn = None, None, None
             leg_angles = [-0.05, -0.05, 0.05, 0.05]
             leg_ang_vels, leg_vels = None, None
 
+        lidar_p1s, lidar_p2s, lidar_frctn = None, None, None
         self._generate_terrain(self.hardcore, terrain_x, terrain_y, terrain_type_poly)
         self.create_hull(hull_pos, angle=hull_ang, linVel=hull_vel, angVel=hull_angVel)
         if hi_lvl_state is None:
@@ -471,6 +471,14 @@ class BipedalWalker(gym.Env, EzPickle):
                 self.lidar[i].fraction = lidar_frctn[i]
                 self.lidar[i].p1 = vec2(lidar_p1s[i])
                 self.lidar[i].p2 = lidar_p2s[i]
+        else:
+            for i in range(10):
+                self.lidar[i].fraction = 1.0
+                self.lidar[i].p1 = self.hull.position
+                self.lidar[i].p2 = (
+                    self.hull.position[0] + math.sin(1.5*i/10.0)*LIDAR_RANGE,
+                    self.hull.position[1] - math.cos(1.5*i/10.0)*LIDAR_RANGE)
+                self.world.RayCast(self.lidar[i], self.lidar[i].p1, self.lidar[i].p2)
 
         if hi_lvl_state is None:
             return self.step(np.array([0,0,0,0]))[0]  # self.step(np.array([0, 0]) if self.continuous else 0)[0]
@@ -515,15 +523,15 @@ class BipedalWalker(gym.Env, EzPickle):
         terrain_x = self.terrain_x
         terrain_y = self.terrain_y
         terrain_type_poly = self.terrain_type_poly
-        lidar_p1s, lidar_p2s, lidar_frctn = [], [], []
-        for ldr in self.lidar:
-            lidar_p1s.append((ldr.p1.x, ldr.p1.y))
-            lidar_p2s.append(ldr.p2)
-            lidar_frctn.append(ldr.fraction)
+        # lidar_p1s, lidar_p2s, lidar_frctn = [], [], []
+        # for ldr in self.lidar:
+        #     lidar_p1s.append((ldr.p1.x, ldr.p1.y))
+        #     lidar_p2s.append(ldr.p2)
+        #     lidar_frctn.append(ldr.fraction)
 
         hi_lvl_state = [(hull_pos.x, hull_pos.y), (hull_vel.x, hull_vel.y), hull_angle, hull_ang_vel,
                         leg_positions, leg_angles, leg_contacts, joint_motor_speeds, joint_max_motor_torques,
-                        leg_ang_vels, leg_vels, terrain_x, terrain_y, terrain_type_poly, lidar_p1s, lidar_p2s, lidar_frctn]
+                        leg_ang_vels, leg_vels, terrain_x, terrain_y, terrain_type_poly]  # , lidar_p1s, lidar_p2s, lidar_frctn]
 
         return nn_state, hi_lvl_state
 
