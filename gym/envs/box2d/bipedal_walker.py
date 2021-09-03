@@ -424,13 +424,14 @@ class BipedalWalker(gym.Env, EzPickle):
         self._generate_clouds()
 
         if hi_lvl_state is not None:
-             hull_pos, hull_vel, hull_ang, hull_angVel, \
+            if len(hi_lvl_state) == 17: hi_lvl_state = hi_lvl_state[:-3]
+            hull_pos, hull_vel, hull_ang, hull_angVel, \
                 leg_positions, leg_angles, leg_contacts, \
                 joint_motor_speeds, joint_max_motor_torques, \
                 leg_ang_vels, leg_vels, \
                 terrain_x, terrain_y, terrain_type_poly = hi_lvl_state
                 # lidar_p1s, lidar_p2s, lidar_frctn = hi_lvl_state
-             self.scroll = hull_pos[0] - VIEWPORT_W/SCALE/5
+            self.scroll = hull_pos[0] - VIEWPORT_W/SCALE/5
         else:
             init_x = TERRAIN_STEP*TERRAIN_STARTPAD/2
             init_y = TERRAIN_HEIGHT+2*LEG_H
