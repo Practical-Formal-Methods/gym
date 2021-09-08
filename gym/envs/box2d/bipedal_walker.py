@@ -424,6 +424,7 @@ class BipedalWalker(gym.Env, EzPickle):
         self._generate_clouds()
 
         if hi_lvl_state is not None:
+            if len(hi_lvl_state) == 17: hi_lvl_state = hi_lvl_state[:-3]  # this line is required as bipedal seeds include useless lidar info
             hull_pos, hull_vel, hull_ang, hull_angVel, \
                 leg_positions, leg_angles, leg_contacts, \
                 joint_motor_speeds, joint_max_motor_torques, \
