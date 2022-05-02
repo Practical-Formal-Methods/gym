@@ -132,7 +132,7 @@ class LunarLander(gym.Env, EzPickle):
         self.world.DestroyBody(self.legs[0])
         self.world.DestroyBody(self.legs[1])
 
-    def reset(self, hi_lvl_state=None):
+    def reset(self, hi_lvl_state=None, rand_state=None):
         self._destroy()
         self.world.contactListener_keepref = ContactDetector(self)
         self.world.contactListener = self.world.contactListener_keepref
@@ -143,11 +143,11 @@ class LunarLander(gym.Env, EzPickle):
         chunk_x = [W/(CHUNKS-1)*i for i in range(CHUNKS)]
 
         if hi_lvl_state is not None:
-            rand_state, lander_pos, lander_vel, lander_angle, lander_ang_vel, \
+            lander_pos, lander_vel, lander_angle, lander_ang_vel, \
                 lleg_contact, rleg_contact, lleg_angle, rleg_angle, \
                 lleg_angvel, rleg_angvel, lleg_lvel, rleg_lvel, \
                 lleg_pos, rleg_pos, height = hi_lvl_state
-            self.np_random.set_state(rand_state)
+            if rand_state is not None: self.np_random.set_state(rand_state)  # for Bug oracles we dont want to restore the state on the particular random state
             self.height = height
             self.helipad_y = height[CHUNKS//2+0]
         else:
@@ -209,7 +209,7 @@ class LunarLander(gym.Env, EzPickle):
         if hi_lvl_state is None:
             return self.step(np.array([0, 0]) if self.continuous else 0)[0]
         else:
-            observation, _ = self.get_state()
+            observation, _, _ = self.get_state()
             return observation
 
 
@@ -320,8 +320,7 @@ class LunarLander(gym.Env, EzPickle):
             1.0 if self.legs[1].ground_contact else 0.0
         ]
         
-        hi_lvl_state = [self.np_random.get_state(),  # current random state
-                        (lander_pos.x, lander_pos.y), 
+        hi_lvl_state = [(lander_pos.x, lander_pos.y), 
                         (lander_vel.x, lander_vel.y),
                         self.lander.angle, 
                         self.lander.angularVelocity,
@@ -337,7 +336,7 @@ class LunarLander(gym.Env, EzPickle):
                         (self.legs[1].position.x, self.legs[1].position.y),
                         self.height]
 
-        return np.array(nn_state, dtype=np.float32), hi_lvl_state
+        return np.array(nn_state, dtype=np.float32), hi_lvl_state, self.np_random.get_state()  # current random state
 
     def _create_particle(self, mass, x, y, ttl):
         p = self.world.CreateDynamicBody(
