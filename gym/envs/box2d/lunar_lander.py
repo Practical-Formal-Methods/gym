@@ -147,7 +147,7 @@ class LunarLander(gym.Env, EzPickle):
                 lleg_contact, rleg_contact, lleg_angle, rleg_angle, \
                 lleg_angvel, rleg_angvel, lleg_lvel, rleg_lvel, \
                 lleg_pos, rleg_pos, height = hi_lvl_state
-            if rand_state is not None: self.np_random.set_state(rand_state)  # for Bug oracles we dont want to restore the state on the particular random state
+            if rand_state is not None: self.np_random.set_state(rand_state)  # for Bug oracles we dont want to restore the state on the particular random state but in SeedBug Oracle we want that.
             self.height = height
             self.helipad_y = height[CHUNKS//2+0]
         else:
