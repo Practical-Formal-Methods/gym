@@ -409,7 +409,7 @@ class BipedalWalker(gym.Env, EzPickle):
         self.joints.append(self.world.CreateJoint(rjd))
 
 
-    def reset(self, hi_lvl_state=None):
+    def reset(self, hi_lvl_state=None, rand_state=None):
         self._destroy()
         self.world.contactListener_bug_workaround = ContactDetector(self)
         self.world.contactListener = self.world.contactListener_bug_workaround
@@ -432,6 +432,7 @@ class BipedalWalker(gym.Env, EzPickle):
                 terrain_x, terrain_y, terrain_type_poly = hi_lvl_state
                 # lidar_p1s, lidar_p2s, lidar_frctn = hi_lvl_state
             self.scroll = hull_pos[0] - VIEWPORT_W/SCALE/5
+            if rand_state is not None: self.np_random.set_state(rand_state)  # for Bug oracles we dont want to restore the state on the particular random state but in SeedBug Oracle we want that.
         else:
             init_x = TERRAIN_STEP*TERRAIN_STARTPAD/2
             init_y = TERRAIN_HEIGHT+2*LEG_H
@@ -484,7 +485,7 @@ class BipedalWalker(gym.Env, EzPickle):
         if hi_lvl_state is None:
             return self.step(np.array([0,0,0,0]))[0]  # self.step(np.array([0, 0]) if self.continuous else 0)[0]
         else:
-            observation, _ = self.get_state()
+            observation, _, _ = self.get_state()
             return observation
         # return self.step(np.array([0,0,0,0]))[0]
 
@@ -524,17 +525,12 @@ class BipedalWalker(gym.Env, EzPickle):
         terrain_x = self.terrain_x
         terrain_y = self.terrain_y
         terrain_type_poly = self.terrain_type_poly
-        # lidar_p1s, lidar_p2s, lidar_frctn = [], [], []
-        # for ldr in self.lidar:
-        #     lidar_p1s.append((ldr.p1.x, ldr.p1.y))
-        #     lidar_p2s.append(ldr.p2)
-        #     lidar_frctn.append(ldr.fraction)
 
         hi_lvl_state = [(hull_pos.x, hull_pos.y), (hull_vel.x, hull_vel.y), hull_angle, hull_ang_vel,
                         leg_positions, leg_angles, leg_contacts, joint_motor_speeds, joint_max_motor_torques,
-                        leg_ang_vels, leg_vels, terrain_x, terrain_y, terrain_type_poly]  # , lidar_p1s, lidar_p2s, lidar_frctn]
+                        leg_ang_vels, leg_vels, terrain_x, terrain_y, terrain_type_poly]
 
-        return nn_state, hi_lvl_state
+        return nn_state, hi_lvl_state, self.np_random.get_state()  # current random state
 
     # @profile
     def step(self, action):
@@ -644,9 +640,6 @@ class BipedalWalker(gym.Env, EzPickle):
 
         self.lidar_render = (self.lidar_render+1) % 100
         i = self.lidar_render
-        # if i < 2*len(self.lidar):
-        #     l = self.lidar[i] if i < len(self.lidar) else self.lidar[len(self.lidar)-i-1]
-        #     self.viewer.draw_polyline( [l.p1, l.p2], color=(1,0,0), linewidth=1 )
 
         for obj in self.drawlist:
             for f in obj.fixtures:
