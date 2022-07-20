@@ -32,6 +32,7 @@ Created by Oleg Klimov. Licensed on the same terms as the rest of OpenAI Gym.
 """
 import sys
 import math
+from tabnanny import check
 import numpy as np
 
 import Box2D
@@ -61,7 +62,7 @@ TRACK_RAD = 900 / SCALE  # Track is heavily morphed circle with this radius
 PLAYFIELD = 2000 / SCALE  # Game over boundary
 FPS = 50  # Frames per second
 ZOOM = 2.7  # Camera zoom
-ZOOM_FOLLOW = True  # Set to False for fixed view (don't use zoom)
+ZOOM_FOLLOW =  True  # Set to False for fixed view (don't use zoom)
 
 
 TRACK_DETAIL_STEP = 21 / SCALE
@@ -148,6 +149,30 @@ class CarRacing(gym.Env, EzPickle):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
+    def get_state(self):
+        hull_linVel = (self.car.hull.linearVelocity.x, self.car.hull.linearVelocity.y)
+        hull_state = [self.car.hull.position[0], self.car.hull.position[1], self.car.hull.angle, hull_linVel, self.car.fuel_spent]
+        wheels_state = []
+        for w in self.car.wheels:
+            w_linVel = (w.linearVelocity.x, w.linearVelocity.y)
+            # wheel pos and angle are calculated relative to hull pos and angle
+            w_state = [
+                w.gas,
+                w.brake,
+                w.steer,
+                w.phase,  # wheel angle
+                w.omega,  # angular velocity
+                w_linVel,
+                w.skid_start,
+                w.skid_particle,
+                w.tiles,
+            ]
+            wheels_state.append(w_state)
+
+        add_info = [self.reward, self.prev_reward, self.tile_visited_count, self.t, TRACK_WIDTH]
+
+        return self.state, [hull_state, wheels_state, add_info], self.rand_state
+    
     def _destroy(self):
         if not self.road:
             return
@@ -156,9 +181,10 @@ class CarRacing(gym.Env, EzPickle):
         self.road = []
         self.car.destroy()
 
-    def _create_track(self):
+    def _create_track(self, track_width=TRACK_WIDTH):
         CHECKPOINTS = 12
-
+        TRACK_WIDTH = track_width
+        print("TRACK_WIDTH:", TRACK_WIDTH)
         # Create checkpoints
         checkpoints = []
         for c in range(CHECKPOINTS):
@@ -342,7 +368,7 @@ class CarRacing(gym.Env, EzPickle):
         self.track = track
         return True
 
-    def reset(self):
+    def reset(self, hi_lvl_state=None, rand_state=None):
         self._destroy()
         self.reward = 0.0
         self.prev_reward = 0.0
@@ -350,18 +376,32 @@ class CarRacing(gym.Env, EzPickle):
         self.t = 0.0
         self.road_poly = []
 
-        while True:
-            success = self._create_track()
-            if success:
-                break
-            if self.verbose == 1:
-                print(
-                    "retry to generate track (normal if there are not many"
-                    "instances of this message)"
-                )
-        self.car = Car(self.world, *self.track[0][1:4])
+        if hi_lvl_state is not None:
+            hull_state, wheels_state, add_info = hi_lvl_state
+            x, y, angle, linVel, f_spent = hull_state
+            self.reward, self.prev_reward, self.tile_visited_count, self.t, track_width = add_info
 
-        return self.step(None)[0]
+        if rand_state is not None:
+            self.np_random.set_state(rand_state)
+            self._create_track(track_width)
+        else:
+            while True:
+                self.rand_state = self.np_random.get_state()
+                success = self._create_track()
+                if success:
+                    break
+                if self.verbose == 1:
+                    print(
+                        "retry to generate track (normal if there are not many"
+                        "instances of this message)"
+                    )
+        
+        if hi_lvl_state is None:
+            self.car = Car(self.world, *self.track[0][1:4])
+            return self.step(None)[0]
+        else:
+            self.car = Car(self.world, angle, x, y, linVel, f_spent, wheels_state)
+            return self.render("state_pixels"), 0, False, {}
 
     def step(self, action):
         if action is not None:

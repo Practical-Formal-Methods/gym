@@ -50,7 +50,9 @@ MUD_COLOR = (0.4, 0.4, 0.0)
 
 
 class Car:
-    def __init__(self, world, init_angle, init_x, init_y):
+    def __init__(self, world, init_angle, init_x, init_y, hull_linVel=None, f_spent=0.0, wheels_state=None):  #  ):
+        # init_x, init_y, init_angle = hull_state
+        # f_spent = 0.0
         self.world = world
         self.hull = self.world.CreateDynamicBody(
             position=(init_x, init_y),
@@ -63,13 +65,30 @@ class Car:
                 ]
             )
         self.hull.color = (0.8, 0.0, 0.0)
+        if hull_linVel is not None:
+            self.hull.linearVelocity = hull_linVel
+
         self.wheels = []
-        self.fuel_spent = 0.0
+        self.fuel_spent = f_spent  # 0.0
         WHEEL_POLY = [
             (-WHEEL_W, +WHEEL_R), (+WHEEL_W, +WHEEL_R),
             (+WHEEL_W, -WHEEL_R), (-WHEEL_W, -WHEEL_R)
             ]
-        for wx, wy in WHEELPOS:
+        for i in range(len(WHEELPOS)):
+            wx, wy = WHEELPOS[i]
+            if wheels_state is not None:
+                w_gas, w_brake, w_steer, w_phase, w_omega, w_linVel, w_skid_start, w_skid_particle, w_tiles = wheels_state[i]
+            else:
+                w_gas = 0.0
+                w_brake = 0.0
+                w_steer = 0.0
+                w_phase = 0.0  # wheel angle
+                w_omega = 0.0  # angular velocity
+                w_linVel = None  # newly added
+                w_skid_start = None
+                w_skid_particle = None
+                w_tiles = set()
+                
             front_k = 1.0 if wy > 0 else 1.0
             w = self.world.CreateDynamicBody(
                 position=(init_x+wx*SIZE, init_y+wy*SIZE),
@@ -83,13 +102,14 @@ class Car:
                     )
             w.wheel_rad = front_k*WHEEL_R*SIZE
             w.color = WHEEL_COLOR
-            w.gas = 0.0
-            w.brake = 0.0
-            w.steer = 0.0
-            w.phase = 0.0  # wheel angle
-            w.omega = 0.0  # angular velocity
-            w.skid_start = None
-            w.skid_particle = None
+            w.gas = w_gas  # 0.0
+            w.brake = w_brake  # 0.0
+            w.steer = w_steer  # 0.0
+            w.phase = w_phase  # 0.0  # wheel angle
+            w.omega = w_omega  # 0.0  # angular velocity
+            w.skid_start = w_skid_start  # None
+            w.skid_particle = w_skid_particle  # None
+            if w_linVel is not None: w.linearVelocity = w_linVel
             rjd = revoluteJointDef(
                 bodyA=self.hull,
                 bodyB=w,
@@ -103,7 +123,7 @@ class Car:
                 upperAngle=+0.4,
                 )
             w.joint = self.world.CreateJoint(rjd)
-            w.tiles = set()
+            w.tiles = w_tiles  # set()
             w.userData = w
             self.wheels.append(w)
         self.drawlist = self.wheels + [self.hull]
