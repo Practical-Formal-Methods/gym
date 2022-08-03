@@ -77,7 +77,7 @@ class Car:
         for i in range(len(WHEELPOS)):
             wx, wy = WHEELPOS[i]
             if wheels_state is not None:
-                w_gas, w_brake, w_steer, w_phase, w_omega, w_linVel, w_skid_start, w_skid_particle = wheels_state[i]
+                w_gas, w_brake, w_steer, w_phase, w_omega, w_linVel = wheels_state[i]
             else:
                 w_gas = 0.0
                 w_brake = 0.0
@@ -85,9 +85,9 @@ class Car:
                 w_phase = 0.0  # wheel angle
                 w_omega = 0.0  # angular velocity
                 w_linVel = None  # newly added
-                w_skid_start = None
-                w_skid_particle = None
-                
+
+            w_skid_start = None
+            w_skid_particle = None
             w_tiles = set()
                 
             front_k = 1.0 if wy > 0 else 1.0

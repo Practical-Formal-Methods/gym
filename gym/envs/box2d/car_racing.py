@@ -170,8 +170,8 @@ class CarRacing(gym.Env, EzPickle):
                 w.phase,  # wheel angle
                 w.omega,  # angular velocity
                 w_linVel,
-                w.skid_start,
-                w.skid_particle,
+                # w.skid_start,
+                # w.skid_particle,
                 # w.tiles,
             ]
             wheels_state.append(w_state)
