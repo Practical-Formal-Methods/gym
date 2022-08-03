@@ -172,13 +172,15 @@ class CarRacing(gym.Env, EzPickle):
                 w_linVel,
                 w.skid_start,
                 w.skid_particle,
-                w.tiles,
+                # w.tiles,
             ]
             wheels_state.append(w_state)
 
         add_info = [self.reward, self.prev_reward, self.tile_visited_count, self.t, TRACK_WIDTH]
 
-        return self.state, [hull_state, wheels_state, add_info], self.rand_state
+        stacked_state = np.transpose(np.array(self.stacked_state), (1, 2, 0))
+
+        return stacked_state, [hull_state, wheels_state, add_info], self.rand_state
     
     def _destroy(self):
         if not self.road:
@@ -409,7 +411,13 @@ class CarRacing(gym.Env, EzPickle):
             return self.step(None)[0]
         else:
             self.car = Car(self.world, angle, x, y, linVel, f_spent, wheels_state)
-            return self.render("state_pixels"), 0, False, {}
+            grayscale_state = np.dot(self.render("state_pixels"), [0.2125, 0.7154, 0.0721])
+            for _ in range(4):
+                self.stacked_state.append(grayscale_state)
+            
+            stacked_state = np.transpose(np.array(self.stacked_state), (1, 2, 0))
+            
+            return stacked_state
 
     def _transform_action(self, action):
         # ("NOTHING", "LEFT", "RIGHT", "ACCELERATE", "BREAK")
