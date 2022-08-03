@@ -137,13 +137,20 @@ class CarRacing(gym.Env, EzPickle):
             shape=polygonShape(vertices=[(0, 0), (1, 0), (1, -1), (0, -1)])
         )
 
-        self.action_space = spaces.Box(
-            np.array([-1, 0, 0]), np.array([+1, +1, +1]), dtype=np.float32
-        )  # steer, gas, brake
+        # actions discretized, so game simplified
+        self.action_space = spaces.Discrete(5)
+        # self.action_space = spaces.Box(
+        #     np.array([-1, 0, 0]), np.array([+1, +1, +1]), dtype=np.float32
+        # )  # steer, gas, brake
 
+        
         self.observation_space = spaces.Box(
-            low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8
+            low=0, high=255, shape=(STATE_H, STATE_W, 4), dtype=np.uint8
         )
+       
+        # self.observation_space = spaces.Box(
+        #     low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8
+        # )
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -184,7 +191,6 @@ class CarRacing(gym.Env, EzPickle):
     def _create_track(self, track_width=TRACK_WIDTH):
         CHECKPOINTS = 12
         TRACK_WIDTH = track_width
-        print("TRACK_WIDTH:", TRACK_WIDTH)
         # Create checkpoints
         checkpoints = []
         for c in range(CHECKPOINTS):
@@ -376,6 +382,8 @@ class CarRacing(gym.Env, EzPickle):
         self.t = 0.0
         self.road_poly = []
 
+        self.stacked_state = []
+
         if hi_lvl_state is not None:
             hull_state, wheels_state, add_info = hi_lvl_state
             x, y, angle, linVel, f_spent = hull_state
@@ -403,7 +411,21 @@ class CarRacing(gym.Env, EzPickle):
             self.car = Car(self.world, angle, x, y, linVel, f_spent, wheels_state)
             return self.render("state_pixels"), 0, False, {}
 
+    def _transform_action(self, action):
+        # ("NOTHING", "LEFT", "RIGHT", "ACCELERATE", "BREAK")
+        # angle, gas, break
+        if action == 0: action = [ 0, 0, 0.0] # Nothing
+        if action == 1: action = [-1, 0, 0.0] # Left
+        if action == 2: action = [+1, 0, 0.0] # Right
+        if action == 3: action = [ 0,+1, 0.0] # Accelerate
+        if action == 4: action = [ 0, 0, 0.8] # break
+
+        return action
+
     def step(self, action):
+        
+        action = self._transform_action(action)
+
         if action is not None:
             self.car.steer(-action[0])
             self.car.gas(action[1])
@@ -431,7 +453,19 @@ class CarRacing(gym.Env, EzPickle):
                 done = True
                 step_reward = -100
 
-        return self.state, step_reward, done, {}
+        grayscale_state = np.dot(self.state[...,:3], [0.2125, 0.7154, 0.0721])
+        # grayscale_state = np.expand_dims(grayscale_state, axis=2)
+        if not self.stacked_state:
+            for _ in range(4):
+                self.stacked_state.append(grayscale_state)
+        else:
+            self.stacked_state.pop()
+            self.stacked_state.append(grayscale_state)
+        stacked_state = np.transpose(np.array(self.stacked_state), (1, 2, 0))
+
+        # clipped_step_reward = np.clip(step_reward, a_min=step_reward, a_max=3.0)
+
+        return stacked_state, step_reward, done, {}
 
     def render(self, mode="human"):
         assert mode in ["human", "state_pixels", "rgb_array"]
